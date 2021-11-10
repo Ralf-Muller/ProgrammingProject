@@ -10,11 +10,9 @@ sns.set()
 def sk_simple_OLS(stocks): # Generate a simple OLS regression model for one data set
 
     inputs, targets, x_train, x_test, y_train, y_test = gen_model(stocks)
-    reg = LinearRegression()
-    reg.fit(x_train,y_train)
-       
+    reg, predicted_v = model_OLS(inputs, x_train, y_train)
+
     test_result = sk_test_OLS(x_test, y_test, reg)
-    predicted_v = inputs*reg.coef_[1]+reg.intercept_
     plot_OLS(inputs, targets, predicted_v, reg)
     plot_yhat_v_y(x_train, y_train, reg)
     
@@ -30,19 +28,29 @@ def gen_model(stocks):
     # Import library to split the data into test and training values
     from sklearn.model_selection import train_test_split 
     t_size = float(input("Please select the Test Size as a decimal point: "))
-    company = input("For which company do you wish to make your analysis? \n" + str(stocks.keys()))
+    company = get_company(stocks)
     targets = stocks[company]['5. adjusted close']
     inputs = stocks[company]['date']
     inputs2 = sm.add_constant(inputs) # Transform the data to add the constant value
     x_train, x_test, y_train, y_test = train_test_split(inputs2, targets, test_size=t_size, random_state=365)
     return inputs, targets, x_train, x_test, y_train, y_test
 
+def model_OLS(inputs, x_train, y_train):
+    reg = LinearRegression()
+    reg.fit(x_train,y_train)
+    predicted_v = inputs*reg.coef_[1]+reg.intercept_
+    return reg, predicted_v
+
+def get_company(stocks):
+    company = input("For which company do you wish to make your analysis? \n" + str(stocks.keys()))
+    return company
+
 # Plotting the results from the regression model vs. the original scatterplot of date vs. price
 def plot_OLS(inputs, targets, predicted_v, reg):
     plt.scatter(inputs,targets)
     fig = plt.plot(inputs,predicted_v, lw=3, c='red', label ='OLS Regression')
-    plt.title('Model vs. Real Values',fontsize=18)
-    plt.xlabel('Time in Seconds', fontsize = 10)
+    plt.title('Trend Line ' + company,fontsize=18)
+    plt.xlabel('Time', fontsize = 10)
     plt.ylabel('Price', fontsize = 10)
     plt.show()
 
@@ -73,8 +81,8 @@ def sk_predval_OLS(stocks):
     date = input("For which date do you wish to know the prediction? \nPlease use YYYY-MM-DD format: ")
     coef = datetime.strptime(date, "%Y-%m-%d").timestamp()
     pred_test = reg.intercept_+reg.coef_[1]*coef
-    return date, RSME, R2
-date, RSME, R2 = sk_predval_OLS(stock_dict2)
+    return pred_test, date, RSME, R2
+pred_test, date, RSME, R2 = sk_predval_OLS(stock_dict2)
 print("The predicted value for ", date, " is: ", pred_test)
 print("The coefficient of determination of the model is: ", R2)
 print("The RSME for the model is: ", RSME)
