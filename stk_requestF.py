@@ -39,7 +39,7 @@ def date_slicer(stk_frame, stock_dict, stock, start_date, end_date):
         raise KeyError("Stock not found. Did you use the correct symbol? Please try again")
     sliced_frame = date_frame.loc[start_date:end_date]
     stock_dict[stock] = sliced_frame
-    sliced_frame.to_csv("{} Data From {} to {}".format(stock, start_date, end_date))
+    #sliced_frame.to_csv("{} Data From {} to {}".format(stock, start_date, end_date))
     return stock_dict
 
 def stock_query(key, stock, start_date, end_date):
