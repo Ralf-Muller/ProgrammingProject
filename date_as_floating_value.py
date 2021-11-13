@@ -5,13 +5,13 @@ import copy
 def _mutate_date_(stocks):
     for company in stocks: # Iterate over the different companies that the client has selected
         stocks[company].reset_index(inplace=True)
-        dateTime = []
+        temp_time = []
         for index,day in enumerate(stocks[company]["index"]):
             dateAsString = day
-            stocks[company]["index"][index] = datetime.strptime(dateAsString, "%Y-%m-%d").timestamp()
-        stocks[company]["index"] = pd.to_numeric(stocks[company]["index"], errors='coerce')
+            temp_time.append(datetime.strptime(dateAsString, "%Y-%m-%d").timestamp())
+            stocks[company]["index"][index] = datetime.strptime(dateAsString, "%Y-%m-%d")
+        stocks[company]["time"] = pd.to_numeric(temp_time, errors='coerce')
         stocks[company].rename(columns = {'index':'date'}, inplace = True)
     return stocks
 
-#stock_dict2 = _mutate_date_(copy.deepcopy(stock_dict))
-#stock_dict2["IBM"].describe(include='all')
+stock_dict2 = _mutate_date_(copy.deepcopy(stock_dict))
