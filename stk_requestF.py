@@ -81,6 +81,7 @@ def req_to_frame(key, stock, start_date, end_date):
     return stock_dict    
 
 
+<<<<<<< HEAD
 
 #<<<<<<< HEAD
 #def main():
@@ -93,4 +94,26 @@ def req_to_frame(key, stock, start_date, end_date):
 #if __name__ == "__main__":
  #   main()
 
+=======
+#<<<<<<< HEAD
+#key = input("Please feed me your key for Alphavantage : ")
+#stock = input("Please feed me a company's stock name : ")
+#start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
+#end_date = input("Please feed me the ending date in YYYY-MM-DD format: ")
+#s_dict = req_to_frame(key, stock, start_date, end_date)
+
+
+
+#=======
+#key = input("Please feed me your key for Alphavantage : ")
+#if key == '':
+    #raise Exception('Please enter a correct API Key')
+#stock = input("Please feed me a company's stock name : ")
+#if stock_exists(stock, key) == False:
+ #   raise Exception("Stock not found. Please use Request Symbol Function to find correct stock")
+#start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
+#end_date = input("Please feed me the ending date in YYYY-MM-DD format: ")
+#stock_dict = req_to_frame(key, stock, start_date, end_date)
+#>>>>>>> 45359415ff0f027b20b4bc102674104b3bb50c58
+>>>>>>> bf7499abf1727dda6d8ade832874c6a3817c4356
 
