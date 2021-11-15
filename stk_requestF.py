@@ -68,11 +68,11 @@ def req_to_frame(key, stock, start_date, end_date):
     return stock_dict    
 
 
-key = input("Please feed me your key for Alphavantage : ")
-stock = input("Please feed me a company's stock name : ")
-start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
-end_date = input("Please feed me the ending date in YYYY-MM-DD format: ")
-s_dict = req_to_frame(key, stock, start_date, end_date)
+#key = input("Please feed me your key for Alphavantage : ")
+#stock = input("Please feed me a company's stock name : ")
+#start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
+#end_date = input("Please feed me the ending date in YYYY-MM-DD format: ")
+#s_dict = req_to_frame(key, stock, start_date, end_date)
 
 
 
