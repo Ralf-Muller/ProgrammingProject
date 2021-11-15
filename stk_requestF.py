@@ -12,7 +12,7 @@
 
 import requests
 import pandas as pd
-import datetime
+from datetime import datetime
 
 
 
@@ -20,7 +20,7 @@ def validate(date_text):
     #From jamylak
     #Validates the date format
     try:
-        datetime.datetime.strptime(date_text, '%Y-%m-%d')
+        datetime.strptime(date_text, '%Y-%m-%d')
     except ValueError:
         raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         
@@ -67,7 +67,18 @@ def req_to_frame(key, stock, start_date, end_date):
     stock_dict = stock_query(key, stock, start_date, end_date)
     return stock_dict    
 
+def stock_exists(stock, key):
+    url = 'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={}&apikey={}'.format(\
+                                                  stock, key)
+    req_stk = requests.get(url)
+    stk_frame = req_stk.json()
+    best_matches = stk_frame['bestMatches']
+    for company in best_matches:
+        if stock == company["1. symbol"]:
+            return True
+    return False
 
+<<<<<<< HEAD
 #key = input("Please feed me your key for Alphavantage : ")
 #stock = input("Please feed me a company's stock name : ")
 #start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
@@ -76,4 +87,15 @@ def req_to_frame(key, stock, start_date, end_date):
 
 
 
+=======
+key = input("Please feed me your key for Alphavantage : ")
+if key == '':
+    raise Exception('Please enter a correct API Key')
+stock = input("Please feed me a company's stock name : ")
+if stock_exists(stock, key) == False:
+    raise Exception("Stock not found. Please use Request Symbol Function to find correct stock")
+start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
+end_date = input("Please feed me the ending date in YYYY-MM-DD format: ")
+stock_dict = req_to_frame(key, stock, start_date, end_date)
+>>>>>>> 45359415ff0f027b20b4bc102674104b3bb50c58
 
