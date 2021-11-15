@@ -78,7 +78,7 @@ def stock_exists(stock, key):
             return True
     return False
 
-<<<<<<< HEAD
+#<<<<<<< HEAD
 #key = input("Please feed me your key for Alphavantage : ")
 #stock = input("Please feed me a company's stock name : ")
 #start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
@@ -87,7 +87,7 @@ def stock_exists(stock, key):
 
 
 
-=======
+#=======
 #key = input("Please feed me your key for Alphavantage : ")
 #if key == '':
     #raise Exception('Please enter a correct API Key')
