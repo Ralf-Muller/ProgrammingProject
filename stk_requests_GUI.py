@@ -1,12 +1,9 @@
-
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov  8 17:29:36 2021
+Created on Mon Nov 15 15:23:24 2021
 
 @author: Rachel
 """
-
-#key: 7QJ0OD6RU5IEVRO4
 
 import tkinter as tk
 import requests
@@ -25,20 +22,24 @@ class ChooseStock:
         self.heading_font = ("Lato", 12, "bold")
         self.button_font = ("Lato", 11)
         self.text_font = ("Lato", 11)
+        self.heading_2_font = ("Lato", 11, "bold")
         
         self.greet = tk.Label(master, text="Welcome to the Stocks Analyser.", font = self.heading_font )
         self.greet.pack(pady=10, padx=10)
 
-        self.find = tk.Button(master, width = 20, text="Find Company Symbol", font = self.button_font, command = self.find_symbol)
+        self.find = tk.Button(width = 20, text="Find Company Symbol", font = self.button_font, command = self.find_symbol)
         self.find.pack(pady=10, padx=10)
-        self.enter = tk.Button(master, width = 20, text="Enter Company Symbol", font = self.button_font, command = self.enter_symbol)
+        self.enter = tk.Button(width = 20, text="Enter Company Symbol", font = self.button_font, command = self.enter_symbol)
         self.enter.pack(pady=10, padx=10)
-        exit = tk.Button(master, text="Quit", width = 20, font = self.button_font, command = self.quit)
+        exit = tk.Button(text="Quit", width = 20, font = self.button_font, command = self.quit)
         exit.pack(pady = 10, padx=10)
-        
+    
     def find_symbol(self):
         # Inputs to find symbol
         child = tk.Toplevel(self.master)
+        self.greet = tk.Label(child, text = "Please enter details to find a company symbol: ", font = self.heading_2_font)
+        self.greet.pack(pady=10, padx=10)
+        
         key_q = tk.Label(child,text="Please enter Alphavantage key: ", font = self.text_font)
         self.key = tk.Entry(child,font = self.text_font)
         key_q.pack(pady=5, padx=5)
@@ -55,8 +56,10 @@ class ChooseStock:
     def enter_symbol(self):
         # Inputs to enter symbol
         child = tk.Toplevel(self.master)
+        self.greet = tk.Label(child, text = "Please enter details to load stock information: ", font = self.heading_2_font)
+        self.greet.pack(pady=10, padx=10)
 
-        key_q = tk.Label(child,text = "Please enter Alphavantage key : ", font = self.text_font)
+        key_q = tk.Label(child,text = "Please enter Alphavantage key: ", font = self.text_font)
         self.key = tk.Entry(child,font = self.text_font)
         key_q.pack(pady=5, padx=5)
         self.key.pack(pady=5, padx=5)
@@ -198,13 +201,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     ChooseStock(root)
     root.mainloop()
-
-#print(s_dict)
-#stock_dict = req_to_frame(key, stock, start_date, end_date)
-
-
-
-
-
 
 
