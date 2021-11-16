@@ -113,7 +113,7 @@ def req_to_frame():
 
     
 #symb_names()  
-#stock_dict = req_to_frame()
+stock_dict = req_to_frame()
   
 
 

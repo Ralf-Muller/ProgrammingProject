@@ -19,8 +19,12 @@
 
 #WMT, TGT
 
+<<<<<<< HEAD
 import GUI_combined as sr
 from GUI_combined import ChooseStock
+=======
+import stk_requestF as sr
+>>>>>>> 1c0ab1c6d9a6e254d0e5f23353f746607671f80e
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -181,8 +185,17 @@ def exponential_graphs(stock_dict, stock, decis, start_date, end_date, smooth, d
  
 
 #KEY: 7QJ0OD6RU5IEVRO4
+<<<<<<< HEAD
 
 s_dict = ChooseStock.req_to_frame(stock, key, start_date, end_date)
+=======
+    
+key = input("Please feed me your key for Alphavantage : ")
+stock = input("Please feed me a company's stock name : ")
+start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
+end_date = input("Please feed me the ending date in YYYY-MM-DD format: ") 
+s_dict = sr.req_to_frame(key, stock, start_date, end_date)
+>>>>>>> 1c0ab1c6d9a6e254d0e5f23353f746607671f80e
 
 
 #%%
