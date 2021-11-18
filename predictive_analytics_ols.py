@@ -149,10 +149,10 @@ def sk_predval_OLS(stocks, size = 1):
     coef = datetime.strptime(date, "%Y-%m-%d").timestamp()
     pred_test = reg.intercept_+reg.coef_[1]*coef
     return pred_test, date, RSME, R2
-pred_test, date, RSME, R2 = sk_predval_OLS(stock_dict2)
-print("The predicted value for ", date, " is: ", round(pred_test,2))
-print("The coefficient of determination of the model is: ", round(R2,2))
-print("The RSME for the model is: ", round(RSME,2))
+#pred_test, date, RSME, R2 = sk_predval_OLS(stock_dict2)
+#print("The predicted value for ", date, " is: ", round(pred_test,2))
+#print("The coefficient of determination of the model is: ", round(R2,2))
+#print("The RSME for the model is: ", round(RSME,2))
 
 
 # This function returns the correlation between two stocks
@@ -160,4 +160,4 @@ def OLS_two_stocks(stocks, size =2):
     RSME, R2, reg = sk_simple_OLS(stocks, size)
     print("The coefficient of correlation between stocks is: ", round(R2,2))
     print("The RSME for the model is: ", round(RSME,2))
-OLS_two_stocks(stock_dict2)
+#OLS_two_stocks(stock_dict2)
