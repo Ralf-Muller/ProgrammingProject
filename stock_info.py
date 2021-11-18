@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 import statistics
 from operator import itemgetter
-import json
 
 
 #key: 7QJ0OD6RU5IEVRO4
@@ -40,10 +39,10 @@ def get_description(s_dict, stock):
           )
 
 
-#key = input("Please feed me your key for Alphavantage : ")
-#stock = input("Please feed me a company's stock name : ")
-#start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
-#end_date = input("Please feed me the ending date in YYYY-MM-DD format: ")
+key = input("Please feed me your key for Alphavantage : ")
+stock = input("Please feed me a company's stock name : ")
+start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
+end_date = input("Please feed me the ending date in YYYY-MM-DD format: ")
 s_dict = sr.req_to_frame(key, stock, start_date, end_date)
 
 get_overview(stock, key)
