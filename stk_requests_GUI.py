@@ -175,13 +175,7 @@ class ChooseStock:
         child = tk.Toplevel(self.master)
         label = tk.Label(child, text = msg, font = self.text_font)
         label.pack(pady = 10, padx=10)
-    
-    def new_window(self):
-        #Create window
-        child = tk.Toplevel(self.master)
-        label = tk.Label(child, font = self.text_font)
-        label.pack(pady = 10, padx=10)
-    
+       
     def clear_text(self, stock, start_date, end_date):
         # Clears text after data has been retrieved
         # https://www.tutorialspoint.com/how-to-clear-the-entry-widget-after-a-button-is-pressed-in-tkinter
