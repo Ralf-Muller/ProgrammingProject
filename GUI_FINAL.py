@@ -116,7 +116,7 @@ class ChooseStock:
         self.dict = stkr.req_to_frame(key, stock, start_date, end_date)
         self.msg_window("Operation Successful. Downloaded {} ".format(list(self.dict.keys()))) 
         
-    """Functions for getting a stocks basic statistics"""
+    """Functions for getting a stock basic statistics"""
     
     
     def describe_symbol(self):
