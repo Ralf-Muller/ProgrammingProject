@@ -19,12 +19,9 @@
 
 #WMT, TGT
 
-<<<<<<< HEAD
 import GUI_combined as sr
 from GUI_combined import ChooseStock
-=======
 import stk_requestF as sr
->>>>>>> 1c0ab1c6d9a6e254d0e5f23353f746607671f80e
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -116,14 +113,15 @@ def co_integration(stock_dict, stock1, stock2, decis):
     cur_seri1 = series_extract(stock1, stock_dict, decis) 
     cur_seri2 = series_extract(stock2, stock_dict, decis)
     t_stat, p_val, crit_v = sm.tsa.stattools.coint(cur_seri1, cur_seri2)
-    print("Results for the cointegration test : \n \
+    coint_string = "Results for the cointegration test : \n \
           T-statistic : {}   \n   \
           P-Value : {}   \n \
           Critical Values at: \n  \
           1% = {}   \n  \
           5% = {}   \n  \
-          10% = {}".format(t_stat, p_val, crit_v[0], crit_v[1], crit_v[2]))
-    print("Null Hypothesis: The two series are cointegrated")
+          10% = {} \n \
+          Null Hypothesis: The two series are cointegrated".format(t_stat, p_val, crit_v[0], crit_v[1], crit_v[2])
+    return coint_string
 
     
 def valid_list(char):
@@ -185,31 +183,31 @@ def exponential_graphs(stock_dict, stock, decis, start_date, end_date, smooth, d
  
 
 #KEY: 7QJ0OD6RU5IEVRO4
-<<<<<<< HEAD
 
-s_dict = ChooseStock.req_to_frame(stock, key, start_date, end_date)
-=======
+
+#s_dict = ChooseStock.req_to_frame(stock, key, start_date, end_date)
+
     
-key = input("Please feed me your key for Alphavantage : ")
-stock = input("Please feed me a company's stock name : ")
-start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
-end_date = input("Please feed me the ending date in YYYY-MM-DD format: ") 
-s_dict = sr.req_to_frame(key, stock, start_date, end_date)
->>>>>>> 1c0ab1c6d9a6e254d0e5f23353f746607671f80e
+#key = input("Please feed me your key for Alphavantage : ")
+#stock = input("Please feed me a company's stock name : ")
+#start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")
+#end_date = input("Please feed me the ending date in YYYY-MM-DD format: ") 
+#s_dict = sr.req_to_frame(key, stock, start_date, end_date)
+
 
 
 #%%
 """Correlogram inputs and function"""
 
 
-stock = input("Feed me a stock name : ")
-diff = input("Do you want to do first differences? 1 for Yes. Anything else to continue ")
-lags = int(input("How many lags? "))
-decis = input("Please tell me, do you want to work with close or adjusted close? \
-                      Press 1 for Adjusted Close \
-                      Press anything else for Close")
+#stock = input("Feed me a stock name : ")
+#diff = input("Do you want to do first differences? 1 for Yes. Anything else to continue ")
+#lags = int(input("How many lags? "))
+#decis = input("Please tell me, do you want to work with close or adjusted close? \
+ #                     Press 1 for Adjusted Close \
+  #                    Press anything else for Close")
 
-correlogram(s_dict, stock, diff, lags, decis)
+#correlogram(s_dict, stock, diff, lags, decis)
 
 
 
@@ -222,16 +220,16 @@ correlogram(s_dict, stock, diff, lags, decis)
 
 """ARIMA inputs and function"""
 
-stock = input("Feed me a stock name : ")
-decis = input("Please tell me, do you want to work with close or adjusted close? \
-                      Press 1 for Adjusted Close \
-                      Press anything else for Close")
-order_p = input("Feed me the AR order p : ")
-order_dif = input("Feed me the Differences order d : ")
-order_q = input("Feed me the MA order q : ")
-pred_days = input("Please feed me the days to predict : ")
-start_date = input("Feed a date to start the prediction YYYY-MM-DD: ")
-make_arima(s_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_date) 
+#stock = input("Feed me a stock name : ")
+#decis = input("Please tell me, do you want to work with close or adjusted close? \
+            #          Press 1 for Adjusted Close \
+             #         Press anything else for Close")
+#order_p = input("Feed me the AR order p : ")
+#order_dif = input("Feed me the Differences order d : ")
+#order_q = input("Feed me the MA order q : ")
+#pred_days = input("Please feed me the days to predict : ")
+#start_date = input("Feed a date to start the prediction YYYY-MM-DD: ")
+#make_arima(s_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_date) 
 
 
 
@@ -243,12 +241,12 @@ make_arima(s_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_d
 
 """Cointegration inputs and function""" 
  
-stock1 = input("Feed me the first stock name : ") 
-stock2 = input("Feed me the second stock name : ")
-decis = input("Please tell me, do you want to work with close or adjusted close? \
-                      Press 1 for Adjusted Close \
-                      Press anything else for Close")
-co_integration(s_dict, stock1, stock2, decis)
+#stock1 = input("Feed me the first stock name : ") 
+#stock2 = input("Feed me the second stock name : ")
+#decis = input("Please tell me, do you want to work with close or adjusted close? \
+ #                     Press 1 for Adjusted Close \
+  #                    Press anything else for Close")
+#co_integration(s_dict, stock1, stock2, decis)
 
 
 
@@ -259,22 +257,22 @@ co_integration(s_dict, stock1, stock2, decis)
 
 """Smoothing inputs and function"""
 
-stock = input("Feed me a stock name : ")
-decis = input("Please tell me, do you want to work with close or adjusted close? \
-                      Press 1 for Adjusted Close \
-                      Press anything else for Close")
-start_date = input("Feed a date to start the prediction YYYY-MM-DD \
-                   PLEASE WRITE A DATE LATER THAN THE FIRST AVAILABLE DATE")
-end_date = input("Feed a date to end the prediction YYYY-MM-DD: \
-                 PLEASE WRITE A DATE LATER THAN THE LAST AVAILABLE DATE")
-smooth = float(input("Please feed me a smoothing level for Simple Exponential Smoothing : "))
-damp = float(input("Please feed me a damping slope for Holt's Additive Model : "))
-user_choice = input("Please write the options you want: \n \
-                         Ex. '01234' \n \
-                         0. Simple Exponential Smoothing \n \
-                         1. Holt Standard \n \
-                         2. Holt Exponential \n \
-                         3. Holt Additive Damped \n \
-                         4. Holt Multiplicative Damped")
+#stock = input("Feed me a stock name : ")
+#decis = input("Please tell me, do you want to work with close or adjusted close? \
+  #                    Press 1 for Adjusted Close \
+ #                     Press anything else for Close")
+#start_date = input("Feed a date to start the prediction YYYY-MM-DD \
+ #                  PLEASE WRITE A DATE LATER THAN THE FIRST AVAILABLE DATE")
+#end_date = input("Feed a date to end the prediction YYYY-MM-DD: \
+ #                PLEASE WRITE A DATE LATER THAN THE LAST AVAILABLE DATE")
+#smooth = float(input("Please feed me a smoothing level for Simple Exponential Smoothing : "))
+#damp = float(input("Please feed me a damping slope for Holt's Additive Model : "))
+#user_choice = input("Please write the options you want: \n \
+ #                        Ex. '01234' \n \
+  #                       0. Simple Exponential Smoothing \n \
+   #                      1. Holt Standard \n \
+    #                     2. Holt Exponential \n \
+     #                    3. Holt Additive Damped \n \
+      #                   4. Holt Multiplicative Damped")
 
-exponential_graphs(s_dict, stock, decis, start_date, end_date, smooth, damp, user_choice)
+#exponential_graphs(s_dict, stock, decis, start_date, end_date, smooth, damp, user_choice)

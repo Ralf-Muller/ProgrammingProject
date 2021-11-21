@@ -10,7 +10,7 @@ import stock_info as stki
 import predictive_analytics_ols as stkols
 import stock_lookup as stkl
 from tkinter import ttk
-
+import time_series as stkts
 #key: 7QJ0OD6RU5IEVRO4
 
 
@@ -47,7 +47,7 @@ class ChooseStock:
 
         self.visualization = tk.Button(master, width = 20, text = "Visualization", font = self.button_font).grid(row=11,column=1,pady=10,padx=10)
         
-        self.time_series = tk.Button(master, width = 20, text = "Time Series", font = self.button_font).grid(row=10,column=3,pady=10,padx=10)
+        self.time_series = tk.Button(master, width = 20, text = "Time Series", font = self.button_font, command = self.time_series_menu).grid(row=10,column=3,pady=10,padx=10)
          
         tk.Button(master, text="Quit", width = 20, font = self.button_font, command = self.quit).grid(row=12,column=2,pady=10,padx=10)
 
@@ -189,40 +189,44 @@ class ChooseStock:
 
 
 #TIME SERIES
+    """Function for Time Series Menu"""
+    
+    def time_series_menu(self):
+        child = tk.Toplevel(self.master)
+
+        tk.Label(child, text="Welcome to the Time Series Menu", font = self.heading_font).grid(row= 0,column= 2)
+
+        tk.Button(child, width = 20, text= "Correlogram", font = self.button_font).grid(row=1,column=1)
+        tk.Button(child, width = 20, text= "ARIMA", font = self.button_font).grid(row=1,column=3)
+        tk.Button(child, width = 20, text= "Cointegration", font = self.button_font, command = self.cointegration).grid(row=3,column=1)
+        tk.Button(child, width = 20, text= "Exponential smoothing", font = self.button_font).grid(row=3,column=3)
 
 
+    def cointegration(self):
+
+        child = tk.Toplevel(self.master)
+
+        self.stock1_coint = tk.StringVar()
+        self.stock2_coint = tk.StringVar()
+        self.decis_coint = tk.StringVar()
+
+        tk.Label(child,text = "Please give me the first stock : ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.stock1_coint).grid(row = 2, column = 1, pady=5, padx=5)
 
 
+        tk.Label(child,text = "Please give me the second stock : ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.stock2_coint).grid(row = 4, column = 1, pady=5, padx=5)
 
 
+        tk.Label(child,text = "Input 1 for Adjusted Close and anything else for Close " , font = self.text_font).grid(row = 5, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.decis_coint).grid(row = 6, column = 1, pady=5, padx=5)
+
+        tk.Button(child,text="Produce test", width = 10, font = self.button_font, command = lambda : self.coint_test(self.dict, self.stock1_coint.get(), self.stock2_coint.get(), self.decis_coint.get())).grid(row = 7, column = 1, pady=10, padx=10)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def coint_test(self, stk_dict, stock1, stock2, decis):
+        self.coint_string = stkts.co_integration(stk_dict, stock1, stock2, decis)
+        self.msg_window(self.coint_string)
 
 
 
