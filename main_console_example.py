@@ -33,6 +33,7 @@ class ChooseStock:
         self.h_sep = ttk.Separator(master, orient='horizontal').grid(row=6, column = 0, columnspan = 5,sticky= 'we', pady=10,padx=10)
 
         self.heading_1 = tk.Label(master, text="Descriptive Analytics", font = self.heading_font).grid(row=8,column=1, pady=10, padx=10)
+        
         self.descr = tk.Button(master, width = 20, text="Company Description", font = self.button_font).grid(row=9,column=1,pady=10,padx=10)
 
         self.v_sep = ttk.Separator(master,orient='vertical').grid(row=7,column=2,rowspan=100,sticky='ns')
