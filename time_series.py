@@ -28,6 +28,7 @@ import pandas as pd
 from statsmodels.tsa.arima_model import ARIMA  
 import statsmodels.tsa.api as sm_tsa
 import datetime
+import tkinter as tk
 
 
 def close_or_adj(decis):
@@ -45,7 +46,7 @@ def series_extract(stock, stock_dict, decis):
         cur_seri = pd.Series(stock_dict[stock][col_use].copy())
         cur_seri.index = pd.to_datetime(cur_seri.index).to_period("B")
     except KeyError:
-        raise KeyError("Stock doesn't exist")
+        raise tk.messagebox.showerror("Error", "Stock doesn't exist in the dictionary")
     return cur_seri
 
 
@@ -58,10 +59,9 @@ def corr_diff(cur_seri, lag_v):
         sm.graphics.tsa.plot_pacf(first_diff.dropna(), lags = lag_v)
         plt.show()
     except IndexError:
-        raise IndexError("Don't put 0 as a lag level")
+        raise tk.messagebox.showerror("Error", "Don't put 0 as a lag level.")
     except ValueError:
-        raise ValueError("Did you input a number above the possible lag limit? \
-                        Or was it a letter?")
+        raise tk.messagebox.showerror("Error", "Did you write a number above the possible lag limit or a letter?.")
         
     
 def corr_nodiff(cur_seri, lag_v):
@@ -72,10 +72,10 @@ def corr_nodiff(cur_seri, lag_v):
         sm.graphics.tsa.plot_pacf(cur_seri.dropna(), lags = lag_v)
         plt.show()
     except IndexError:
-        raise IndexError("Don't put 0 as a lag level")
+        raise tk.messagebox.showerror("Error", "Don't put 0 as a lag level")
     except ValueError:
-        raise ValueError("Did you input a number above the possible lag limit? \
-                        Or was it a letter?")
+        raise tk.messagebox.showerror("Error", "Did you write a number above the possible lag limit or a letter?.")
+
 
 def correlogram(stock_dict, stock, diff, lags, decis):
     #Creates the graphs for ACF and PACF based on user input
@@ -102,9 +102,9 @@ def make_arima(stock_dict, stock, decis, order_p, order_dif, order_q, pred_days,
         fig = res.plot_predict(start = start_date, end =  cur_seri.index[-1] + pred_days, dynamic = False, ax = ax, plot_insample = False)
         plt.show()
     except KeyError:
-        raise KeyError("Start Date is lower than the earliest date available")
+        raise tk.messagebox.showerror("Error", "Start Date is lower than the earliest date available")
     except ValueError:
-        raise ValueError("Start Date is above the latest date available")
+        raise tk.messagebox.showerror("Error", "Start Date is above the latest date available.")
     plt.show()
     
 
@@ -131,9 +131,9 @@ def date_processes(cur_seri, start_date, end_date):
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
     if start_date <= cur_seri.index[0].to_timestamp():
-        raise Exception("Date too early")
+        raise tk.messagebox.showerror("Error", "Date too early")
     if end_date <= cur_seri.index[-1].to_timestamp():
-        raise Exception("Date should be later")
+        raise tk.messagebox.showerror("Error", "Date too late")
     diff_date_d = end_date-start_date
     diff_date = diff_date_d.days
     sr.date_order(start_date, end_date)
@@ -163,7 +163,7 @@ def plotter_smooth(start_date, end_date, fit_and_fcast, cur_seri, ax, user_choic
     try:
         user_list =  set(map(lambda x : int(x), filter(valid_list, user_choice)))
     except ValueError:
-        raise ValueError("You wrote a non-numerical character in smoothing options")   
+        raise tk.messagebox.showerror("Error", "You wrote a non-numerical character in smoothing options")  
     for i in user_list:
         fit_and_fcast[i][0].fittedvalues[start_date:end_date].plot(ax=ax, color = color[i])
         if end_date > cur_seri.index[-1].to_timestamp() :
