@@ -202,7 +202,7 @@ class ChooseStock:
 
         tk.Label(child, text="Welcome to the Time Series Menu", font = self.heading_font).grid(row= 0,column= 2)
 
-        tk.Button(child, width = 20, text= "Correlogram", font = self.button_font, command = self.test_graph).grid(row=1,column=1)
+        tk.Button(child, width = 20, text= "Correlogram", font = self.button_font, command = self.correlograms).grid(row=1,column=1)
         tk.Button(child, width = 20, text= "ARIMA", font = self.button_font).grid(row=1,column=3)
         tk.Button(child, width = 20, text= "Cointegration", font = self.button_font, command = self.cointegration).grid(row=3,column=1)
         tk.Button(child, width = 20, text= "Exponential smoothing", font = self.button_font).grid(row=3,column=3)
@@ -236,27 +236,63 @@ class ChooseStock:
 
 
 
-    def test_graph(self):
+    #def test_graph(self):
         
-        child = tk.Toplevel(self.master)
+       # child = tk.Toplevel(self.master)
 
-        self.x = ["Col A", "Col B"]
-        self.y = [50, 20]
+        #self.x = ["Col A", "Col B"]
+        #self.y = [50, 20]
         
-        fig = plt.figure(figsize = (4, 5))
-        plt.bar(x = self.x, height = self.y)
+       # fig = plt.figure(figsize = (4, 5))
+       # plt.bar(x = self.x, height = self.y)
         
-        canvas = FigureCanvasTkAgg(fig, master = child)
-        canvas.draw()
-        canvas.get_tk_widget().grid(row = 1, column = 0, ipadx = 40, ipady = 20)
+       # canvas = FigureCanvasTkAgg(fig, master = child)
+       # canvas.draw()
+       # canvas.get_tk_widget().grid(row = 1, column = 0, ipadx = 40, ipady = 20)
         
         #toolbarFrame = tk.Frame(master = child)
         #toolbarFrame.grid(row = 2, column = 0)
         #toolbar = NavigationToolbar2Tk(canvas, toolbarFrame) 
         #toolbar.update()
+        
+    def correlograms(self):
+        
+        child = tk.Toplevel(self.master)
+        
+        self.stock_corr = tk.StringVar()
+        self.diff_corr = tk.StringVar()
+        self.decis_corr = tk.StringVar()
+        self.lags_corr = tk.StringVar()
+
+        tk.Label(child,text = "Please give me a stock : ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.stock_corr).grid(row = 2, column = 1, pady=5, padx=5)
 
 
+        tk.Label(child,text = "Please give me the number of lags : ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.lags_corr).grid(row = 4, column = 1, pady=5, padx=5)
 
+
+        tk.Label(child,text = "Input 1 for Adjusted Close and anything else for Close " , font = self.text_font).grid(row = 5, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.decis_corr).grid(row = 6, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Input 1 for First Differences and anything else for normal " , font = self.text_font).grid(row = 7, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.diff_corr).grid(row = 8, column = 1, pady=5, padx=5)
+
+        tk.Button(child,text="Produce test", width = 10, font = self.button_font, command = lambda : self.show_correlogram(self.dict, self.stock_corr.get(), self.diff_corr.get(), self.lags_corr.get(), self.decis_corr.get())).grid(row = 9, column = 1, pady=10, padx=10)
+
+    def show_correlogram(self, s_dict, stock, diff, lags, decis):
+        
+        child = tk.Toplevel(self.master)
+        
+        self.acf, self.pacf = stkts.correlogram(self.dict, stock, diff, lags, decis)
+        
+        canvas_acf = FigureCanvasTkAgg(self.acf, master = child)
+        canvas_acf.draw()
+        canvas_acf.get_tk_widget().grid(row = 1, column = 0, ipadx = 40, ipady = 20)
+        
+        canvas_pacf = FigureCanvasTkAgg(self.pacf, master = child)
+        canvas_pacf.draw()
+        canvas_pacf.get_tk_widget().grid(row = 2, column = 0, ipadx = 40, ipady = 20)
 
 
 

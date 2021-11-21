@@ -54,36 +54,37 @@ def corr_diff(cur_seri, lag_v):
     #Creates the ACF and PACF for a series with differences
     try:
         first_diff = cur_seri.diff()
-        sm.graphics.tsa.plot_acf(first_diff.dropna(), lags = lag_v)
-        plt.show()
-        sm.graphics.tsa.plot_pacf(first_diff.dropna(), lags = lag_v)
-        plt.show()
+        acf = sm.graphics.tsa.plot_acf(first_diff.dropna(), lags = lag_v)
+        #plt.show()
+        pacf = sm.graphics.tsa.plot_pacf(first_diff.dropna(), lags = lag_v)
+        #plt.show()
     except IndexError:
         raise tk.messagebox.showerror("Error", "Don't put 0 as a lag level.")
     except ValueError:
         raise tk.messagebox.showerror("Error", "Did you write a number above the possible lag limit or a letter?.")
-        
+    return acf, pacf    
     
 def corr_nodiff(cur_seri, lag_v):
     #Creates the ACF and PACF for a series without differences
     try:
-        sm.graphics.tsa.plot_acf(cur_seri.dropna(), lags = lag_v)
-        plt.show()
-        sm.graphics.tsa.plot_pacf(cur_seri.dropna(), lags = lag_v)
-        plt.show()
+        acf = sm.graphics.tsa.plot_acf(cur_seri.dropna(), lags = lag_v)
+        #plt.show()
+        pacf = sm.graphics.tsa.plot_pacf(cur_seri.dropna(), lags = lag_v)
+        #plt.show()
     except IndexError:
         raise tk.messagebox.showerror("Error", "Don't put 0 as a lag level")
     except ValueError:
         raise tk.messagebox.showerror("Error", "Did you write a number above the possible lag limit or a letter?.")
-
+    return acf, pacf
 
 def correlogram(stock_dict, stock, diff, lags, decis):
     #Creates the graphs for ACF and PACF based on user input
     cur_seri = series_extract(stock, stock_dict, decis)        
     if diff == "1":
-        corr_diff(cur_seri, lags)
+        acf, pacf = corr_diff(cur_seri, lags)
     else:
-        corr_nodiff(cur_seri, lags)
+        acf, pacf = corr_nodiff(cur_seri, lags)
+    return acf, pacf
 
 
 def make_arima(stock_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_date):
