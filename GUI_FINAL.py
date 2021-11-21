@@ -1,3 +1,7 @@
+#Grid and stringvar solution from Code With Harry: https://www.codewithharry.com/videos/python-gui-tkinter-hindi-10
+#Graph into TKINTER FROM geekforgeeks https://www.geeksforgeeks.org/how-to-embed-matplotlib-charts-in-tkinter-gui/
+#and Somraj Chodhury from stack overflow: https://stackoverflow.com/questions/59550783/embedding-a-matplotlib-graph-in-tkinter-grid-method-and-customizing-matplotl
+
 
 
 import tkinter as tk
@@ -11,6 +15,8 @@ import predictive_analytics_ols as stkols
 import stock_lookup as stkl
 from tkinter import ttk
 import time_series as stkts
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 #key: 7QJ0OD6RU5IEVRO4
 
 
@@ -196,7 +202,7 @@ class ChooseStock:
 
         tk.Label(child, text="Welcome to the Time Series Menu", font = self.heading_font).grid(row= 0,column= 2)
 
-        tk.Button(child, width = 20, text= "Correlogram", font = self.button_font).grid(row=1,column=1)
+        tk.Button(child, width = 20, text= "Correlogram", font = self.button_font, command = self.test_graph).grid(row=1,column=1)
         tk.Button(child, width = 20, text= "ARIMA", font = self.button_font).grid(row=1,column=3)
         tk.Button(child, width = 20, text= "Cointegration", font = self.button_font, command = self.cointegration).grid(row=3,column=1)
         tk.Button(child, width = 20, text= "Exponential smoothing", font = self.button_font).grid(row=3,column=3)
@@ -230,9 +236,24 @@ class ChooseStock:
 
 
 
+    def test_graph(self):
+        
+        child = tk.Toplevel(self.master)
 
-
-
+        self.x = ["Col A", "Col B"]
+        self.y = [50, 20]
+        
+        fig = plt.figure(figsize = (4, 5))
+        plt.bar(x = self.x, height = self.y)
+        
+        canvas = FigureCanvasTkAgg(fig, master = child)
+        canvas.draw()
+        canvas.get_tk_widget().grid(row = 1, column = 0, ipadx = 40, ipady = 20)
+        
+        #toolbarFrame = tk.Frame(master = child)
+        #toolbarFrame.grid(row = 2, column = 0)
+        #toolbar = NavigationToolbar2Tk(canvas, toolbarFrame) 
+        #toolbar.update()
 
 
 
