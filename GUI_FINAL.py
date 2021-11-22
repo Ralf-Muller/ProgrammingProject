@@ -49,7 +49,7 @@ class ChooseStock:
         self.v_sep = ttk.Separator(master,orient='vertical').grid(row=7,column=2,rowspan=5,sticky='ns')
 
         self.heading_2 = tk.Label(master, text="Predictive Analytics", font = self.heading_font).grid(row=8,column=3)
-        self.ols = tk.Button(master, width = 20, text="OLS", font=self.button_font).grid(row=9,column=3)
+        self.ols = tk.Button(master, width = 20, text="OLS", font=self.button_font, command = self.ols_menu).grid(row=9,column=3)
 
         self.stats = tk.Button(master, width = 20, text = "Basic Statistics", font = self.button_font, command = self.describe_symbol).grid(row= 10,column=1,pady=10,padx=10)
 
@@ -157,8 +157,14 @@ class ChooseStock:
 
 
 ## OLS
+    def ols_menu(self):
         
-    
+        child = tk.Toplevel(self.master)
+
+        tk.Label(child, text="Welcome to the Linear Regression Menu", font = self.heading_font).grid(row= 0,column= 2)
+
+        tk.Button(child, width = 20, text= "OLS With 2 Stocks", font = self.button_font, command = self.ols_2_stocks).grid(row=1,column=1)
+        tk.Button(child, width = 20, text= "OLS With 1 Stock", font = self.button_font, command = self.ols_1_stock).grid(row=1,column=3)    
     
     def ols_2_stocks(self):
         child = tk.Toplevel(self.master)
@@ -205,12 +211,10 @@ class ChooseStock:
 
         tk.Label(child, text="Please select a visualisation from list below", font = self.heading_font).grid(row= 0,column= 2)
 
-        self.ols2 = tk.Button(child, width = 20, text="OLS Two Stocks", font = self.button_font, command = self.ols_2_stocks).grid(row=1,column=1,pady=5,padx=5)          
-        self.ols2 = tk.Button(child, width = 20, text="OLS Prediction", font = self.button_font, command = self.ols_1_stock).grid(row=2,column=1,pady=5,padx=5)           
         self.raw = tk.Button(child, width = 20, text="Raw Time Series", font = self.button_font, command = self.raw_ts).grid(row=3,column=1,pady=5,padx=5)           
         self.trend = tk.Button(child, width = 20, text="Trend Line", font = self.button_font, command = self.trend).grid(row=4,column=1,pady=5,padx=5)     
         self.sma = tk.Button(child, width = 20, text="Moving Averages", font = self.button_font, command = self.sma).grid(row=5,column=1,pady=5,padx=5)           
-        self.bband = tk.Button(child, width = 20, text="Bollinger Bands", font = self.button_font, command = self.bollinger).grid(row=1,column=3,pady=5,padx=5) 
+        self.bband = tk.Button(child, width = 20, text="Bollinger Bands", font = self.button_font, command = self.bollinger).grid(row=2,column=1,pady=5,padx=5) 
         self.wsma = tk.Button(child, width = 20, text="Weighted Moving Averages", font = self.button_font, command = self.wma).grid(row=2,column=3,pady=5,padx=5)    
         self.bmacd = tk.Button(child, width = 20, text="MACD", font = self.button_font, command = self.macd).grid(row=3,column=3,pady=5,padx=5)    
         self.brsi = tk.Button(child, width = 20, text="RSI", font = self.button_font, command = self.rsi).grid(row=4,column=3,pady=5,padx=5)        
@@ -366,6 +370,8 @@ class ChooseStock:
         tk.Button(child, width = 20, text= "Exponential smoothing", font = self.button_font, command = self.exponential_menu).grid(row=3,column=3)
 
 
+    """Functions for cointegration test"""
+
     def cointegration(self):
 
         child = tk.Toplevel(self.master)
@@ -392,26 +398,7 @@ class ChooseStock:
         self.coint_string = stkts.co_integration(stk_dict, stock1, stock2, decis)
         self.msg_window(self.coint_string)
 
-
-
-    #def test_graph(self):
-        
-       # child = tk.Toplevel(self.master)
-
-        #self.x = ["Col A", "Col B"]
-        #self.y = [50, 20]
-        
-       # fig = plt.figure(figsize = (4, 5))
-       # plt.bar(x = self.x, height = self.y)
-        
-       # canvas = FigureCanvasTkAgg(fig, master = child)
-       # canvas.draw()
-       # canvas.get_tk_widget().grid(row = 1, column = 0, ipadx = 40, ipady = 20)
-        
-        #toolbarFrame = tk.Frame(master = child)
-        #toolbarFrame.grid(row = 2, column = 0)
-        #toolbar = NavigationToolbar2Tk(canvas, toolbarFrame) 
-        #toolbar.update()
+    """Functions for correlograms"""
         
     def correlograms(self):
         
@@ -440,17 +427,9 @@ class ChooseStock:
 
     def show_correlogram(self, s_dict, stock, diff, lags, decis):
         
-        #child = tk.Toplevel(self.master)
-        
-        stkts.correlogram(self.dict, stock, diff, lags, decis)
-        
-        #canvas_acf = FigureCanvasTkAgg(self.acf, master = child)
-        #canvas_acf.draw()
-        #canvas_acf.get_tk_widget().grid(row = 1, column = 0, ipadx = 40, ipady = 20)
-        
-        #canvas_pacf = FigureCanvasTkAgg(self.pacf, master = child)
-        #canvas_pacf.draw()
-        #canvas_pacf.get_tk_widget().grid(row = 2, column = 0, ipadx = 40, ipady = 20)
+        stkts.correlogram(self.dict, stock, diff, lags, decis)      
+
+    """Functions for arima"""
 
     def arima_menu(self):
         
@@ -496,7 +475,8 @@ class ChooseStock:
         self.arima_res = stkts.make_arima(s_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_date)
         self.msg_window(self.arima_res)
         
-        
+    """Functions for exponential"""
+       
     def exponential_menu(self):
         
         child = tk.Toplevel(self.master)
