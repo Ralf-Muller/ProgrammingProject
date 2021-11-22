@@ -3,7 +3,7 @@
 #and Somraj Chodhury from stack overflow: https://stackoverflow.com/questions/59550783/embedding-a-matplotlib-graph-in-tkinter-grid-method-and-customizing-matplotl
 
 
-
+import copy
 import tkinter as tk
 import requests
 import numpy as np
@@ -27,7 +27,7 @@ class ChooseStock:
         self.master = master
 
         master.title("Stock Analyser")
-        master.geometry('660x400')
+        master.geometry('1600x900')
 
         self.heading_font = ("Lato", 12, "bold")
         self.button_font = ("Lato", 11)
@@ -53,7 +53,7 @@ class ChooseStock:
 
         self.stats = tk.Button(master, width = 20, text = "Basic Statistics", font = self.button_font, command = self.describe_symbol).grid(row= 10,column=1,pady=10,padx=10)
 
-        self.visualization = tk.Button(master, width = 20, text = "Visualization", font = self.button_font).grid(row=11,column=1,pady=10,padx=10)
+        self.visualization = tk.Button(master, width = 20, text = "Visualization", font = self.button_font, command=self.visualisations_menu).grid(row=11,column=1,pady=10,padx=10)
         
         self.time_series = tk.Button(master, width = 20, text = "Time Series", font = self.button_font, command = self.time_series_menu).grid(row=10,column=3,pady=10,padx=10)
          
@@ -122,6 +122,7 @@ class ChooseStock:
     def req_to_frame(self, key, stock, start_date, end_date):
         #stkr.date_order(start_date, end_date)
         self.dict = stkr.req_to_frame(key, stock, start_date, end_date)
+        self.dict2 = datef._mutate_date_(copy.deepcopy(self.dict))
         self.msg_window("Operation Successful. Downloaded {} ".format(list(self.dict.keys()))) 
         
     """Functions for getting a stock basic statistics"""
@@ -136,7 +137,7 @@ class ChooseStock:
         tk.Label(child,text="Please give me a downloaded stock: ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.stock_d).grid(row = 2, column = 1, pady=5, padx=5)
 
-        tk.Button(child,text="Describe stock", width = 10, font = self.button_font, command = lambda: self.get_descr(self.dict, self.stock_d.get())).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Button(child,text="Describe stock", width = 15, font = self.button_font, command = lambda: self.get_descr(self.dict, self.stock_d.get())).grid(row = 3, column = 1, pady=5, padx=5)
         
     def get_descr(self, stk_dict, stock_d):
         self.d_values, self.str_values = stki.get_description(stk_dict, stock_d)
@@ -154,21 +155,17 @@ class ChooseStock:
 
 
 
-#VISUALIZATIONS
-
-
-
-
-
 
 ## OLS
     def ols_2_stocks(self):
         child = tk.Toplevel(self.master)
         stock_ols2 = tk.Label(child,text="For which stocks do you wish to make your analysis (separated with comma): " + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
-        self.stock_ols2 = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
+        self.stock_ols2 = tk.Entry(child,font = self.text_font)
+        self.stock_ols2.grid(row=2,column=1,pady=5,padx=5)
         
         stock_olst = tk.Label(child,text="Please select the Test Size as a decimal point: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
-        self.stock_olst = tk.Entry(child,font = self.text_font).grid(row=4,column=1,pady=5,padx=5)     
+        self.stock_olst = tk.Entry(child,font = self.text_font)
+        self.stock_olst.grid(row=4,column=1,pady=5,padx=5) 
         
         describe = tk.Button(child,text="Analyse stocks", width = 10, font = self.button_font, command = lambda: self.get_ols2(self.dict2, self.stock_ols2.get(), self.stock_olst.get())).grid(row=5,column=1,pady=5,padx=5)
 
@@ -177,17 +174,19 @@ class ChooseStock:
         ols2str = stkols.OLS_two_stocks(dict2, companies, t_size)
         self.msg_window(ols2str)
 
-
     def ols_1_stock(self):
         child = tk.Toplevel(self.master)
         stock_ols = tk.Label(child,text="For which stock do you wish to make your analysis: " + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
-        self.stock_ols = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
+        self.stock_ols = tk.Entry(child,font = self.text_font)
+        self.stock_ols.grid(row=2,column=1,pady=5,padx=5)
         
         stock_olst = tk.Label(child,text="Please select the Test Size as a decimal point: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
-        self.stock_olst = tk.Entry(child,font = self.text_font).grid(row=4,column=1,pady=5,padx=5)
+        self.stock_olst = tk.Entry(child,font = self.text_font)
+        self.stock_olst.grid(row=4,column=1,pady=5,padx=5)
         
         dateols = tk.Label(child,text="For which date do you wish to know the prediction? \nPlease use YYYY-MM-DD format: ", font = self.text_font).grid(row=5,column=1,pady=5,padx=5)
-        self.dateols = tk.Entry(child,font = self.text_font).grid(row=6,column=1,pady=5,padx=5)
+        self.dateols = tk.Entry(child,font = self.text_font)
+        self.dateols.grid(row=6,column=1,pady=5,padx=5)
         
         describe = tk.Button(child,text="Analyse stocks", width = 10, font = self.button_font, command = lambda: self.get_ols(self.dict2, self.stock_ols.get(), self.stock_olst.get(), self.dateols.get())).grid(row=7,column=1,pady=5,padx=5)
 
@@ -197,11 +196,30 @@ class ChooseStock:
         self.msg_window(ols2str)
 
  ## Visualisations
+ 
+    def visualisations_menu(self):
+        child = tk.Toplevel(self.master)
+
+        tk.Label(child, text="Please select a visualisation from list below", font = self.heading_font).grid(row= 0,column= 2)
+
+        self.ols2 = tk.Button(child, width = 20, text="OLS Two Stocks", font = self.button_font, command = self.ols_2_stocks).grid(row=1,column=1,pady=5,padx=5)          
+        self.ols2 = tk.Button(child, width = 20, text="OLS Prediction", font = self.button_font, command = self.ols_1_stock).grid(row=2,column=1,pady=5,padx=5)           
+        self.raw = tk.Button(child, width = 20, text="Raw Time Series", font = self.button_font, command = self.raw_ts).grid(row=3,column=1,pady=5,padx=5)           
+        self.trend = tk.Button(child, width = 20, text="Trend Line", font = self.button_font, command = self.trend).grid(row=4,column=1,pady=5,padx=5)     
+        self.sma = tk.Button(child, width = 20, text="Moving Averages", font = self.button_font, command = self.sma).grid(row=5,column=1,pady=5,padx=5)           
+        self.bband = tk.Button(child, width = 20, text="Bollinger Bands", font = self.button_font, command = self.bollinger).grid(row=1,column=3,pady=5,padx=5) 
+        self.wsma = tk.Button(child, width = 20, text="Weighted Moving Averages", font = self.button_font, command = self.wma).grid(row=2,column=3,pady=5,padx=5)    
+        self.bmacd = tk.Button(child, width = 20, text="MACD", font = self.button_font, command = self.macd).grid(row=3,column=3,pady=5,padx=5)    
+        self.brsi = tk.Button(child, width = 20, text="RSI", font = self.button_font, command = self.rsi).grid(row=4,column=3,pady=5,padx=5)        
+        self.autocorrel = tk.Button(child, width = 20, text="Autocorrelation", font = self.button_font, command = self.auto_c).grid(row=5,column=3,pady=5,padx=5)
+
 
     def raw_ts(self):
         child = tk.Toplevel(self.master)
+
         stock_raw = tk.Label(child,text="For which company do you wish to make your analysis: "+ ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
-        self.stock_raw = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
+        self.stock_raw = tk.Entry(child,font = self.text_font)
+        self.stock_raw.grid(row=2,column=1,pady=5,padx=5)
         
         describe = tk.Button(child,text="Plot Stock", width = 10, font = self.button_font, command = lambda: self.get_raw(self.dict2, self.stock_raw.get())).grid(row=3,column=1,pady=5,padx=5)
 
@@ -213,10 +231,12 @@ class ChooseStock:
     def trend(self):
         child = tk.Toplevel(self.master)
         s_trend = tk.Label(child,text="For which stock do you wish to make your analysis: " + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
-        self.s_trend = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
+        self.s_trend = tk.Entry(child,font = self.text_font)
+        self.s_trend.grid(row=2,column=1,pady=5,padx=5)
         
         stock_olst = tk.Label(child,text="Please select the Test Size as a decimal point: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
-        self.stock_olst = tk.Entry(child,font = self.text_font).grid(row=4,column=1,pady=5,padx=5)
+        self.stock_olst = tk.Entry(child,font = self.text_font)
+        self.stock_olst.grid(row=4,column=1,pady=5,padx=5)
         
         describe = tk.Button(child,text="Plot Stock", width = 10, font = self.button_font, command = lambda: self.get_trend(self.dict2, self.s_trend.get(), self.stock_olst.get())).grid(row=5,column=1,pady=5,padx=5)
 
@@ -224,14 +244,15 @@ class ChooseStock:
         companies = stocks.split(',')
         vs.plot_trend_line(dict2, companies, t_size)
 
-
     def sma(self):
         child = tk.Toplevel(self.master)
         stock_sma = tk.Label(child,text="For which stock do you wish to make your analysis: " + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
-        self.stock_sma = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
+        self.stock_sma = tk.Entry(child,font = self.text_font)
+        self.stock_sma.grid(row=2,column=1,pady=5,padx=5)
         
         sma_win = tk.Label(child,text="Please select the Window Size: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
-        self.sma_win = tk.Entry(child,font = self.text_font).grid(row=4,column=1,pady=5,padx=5)
+        self.sma_win = tk.Entry(child,font = self.text_font)
+        self.sma_win.grid(row=4,column=1,pady=5,padx=5)
 
         describe = tk.Button(child,text="Plot stocks", width = 10, font = self.button_font, command = lambda: self.get_sma(self.dict2, self.stock_sma.get(), self.sma_win.get())).grid(row=5,column=1,pady=5,padx=5)
 
@@ -242,12 +263,14 @@ class ChooseStock:
     def wma(self):
         child = tk.Toplevel(self.master)
         stock_wma = tk.Label(child,text="For which stock do you wish to make your analysis: " + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
-        self.stock_wma = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
+        self.stock_wma = tk.Entry(child,font = self.text_font)
+        self.stock_wma.grid(row=2,column=1,pady=5,padx=5)
         
         wma_win = tk.Label(child,text="Please select the Window Size: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
-        self.wma_win = tk.Entry(child,font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
+        self.wma_win = tk.Entry(child,font = self.text_font)
+        self.wma_win.grid(row=4,column=1,pady=5,padx=5)
 
-        describe = tk.Button(child,text="Plot stocks", width = 10, font = self.button_font, command = lambda: self.get_wma(self.dict2, self.stock_wma.get(), self.wma_win.get())).grid(row=4,column=1,pady=5,padx=5)
+        describe = tk.Button(child,text="Plot stocks", width = 10, font = self.button_font, command = lambda: self.get_wma(self.dict2, self.stock_wma.get(), self.wma_win.get())).grid(row=5,column=1,pady=5,padx=5)
 
     def get_wma(self, dict2, stocks, win_size): 
         companies = stocks.split(',')
@@ -256,13 +279,18 @@ class ChooseStock:
     def bollinger(self):
         child = tk.Toplevel(self.master)
         stock_sma = tk.Label(child,text="For which stock do you wish to make your analysis: " + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
-        self.stock_sma = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
+        self.stock_sma = tk.Entry(child,font = self.text_font)
+        self.stock_sma.grid(row=2,column=1,pady=5,padx=5)
         
         sma_win = tk.Label(child,text="Please select the Window Size: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
-        self.sma_win = tk.Entry(child,font = self.text_font).grid(row=4,column=1,pady=5,padx=5)
+        self.sma_win = tk.Entry(child,font = self.text_font)
+        self.sma_win.grid(row=4,column=1,pady=5,padx=5)
         
         stdev = tk.Label(child,text='How many standard deviations away from the mean do you wish to calculate? ', font = self.text_font).grid(row=5,column=1,pady=5,padx=5)
-        self.stdev = tk.Entry(child,font = self.text_font).grid(row=6,column=1,pady=5,padx=5)
+        self.stdev = tk.Entry(child,font = self.text_font)
+        self.stdev.grid(row=6,column=1,pady=5,padx=5)
+        
+        describe = tk.Button(child,text="Plot stocks", width = 10, font = self.button_font, command = lambda: self.get_bollinger(self.dict2, self.stock_sma.get(), self.sma_win.get(), self.stdev.get())).grid(row=7,column=1,pady=5,padx=5)
 
     def get_bollinger(self, dict2, stocks, win_size, stdev): 
         companies = stocks.split(',')
@@ -271,16 +299,20 @@ class ChooseStock:
     def macd(self):
         child = tk.Toplevel(self.master)
         stock_macd = tk.Label(child,text="For which stock do you wish to make your analysis: " + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
-        self.stock_macd = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
+        self.stock_macd = tk.Entry(child,font = self.text_font)
+        self.stock_macd.grid(row=2,column=1,pady=5,padx=5)
         
         fema = tk.Label(child,text="Please enter the length of the Fast EMA: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
-        self.fema = tk.Entry(child,font = self.text_font).grid(row=4,column=1,pady=5,padx=5)
+        self.fema = tk.Entry(child,font = self.text_font)
+        self.fema.grid(row=4,column=1,pady=5,padx=5)
         
         sema = tk.Label(child,text="Please enter the length of the Slow EMA: ", font = self.text_font).grid(row=5,column=1,pady=5,padx=5)
-        self.sema = tk.Entry(child,font = self.text_font).grid(row=6,column=1,pady=5,padx=5)
+        self.sema = tk.Entry(child,font = self.text_font)
+        self.sema.grid(row=6,column=1,pady=5,padx=5)
         
         smooth = tk.Label(child,text="Please enter the period of the Signal Line", font = self.text_font).grid(row=7,column=1,pady=5,padx=5)
-        self.smooth = tk.Entry(child,font = self.text_font).grid(row=8,column=1,pady=5,padx=5)
+        self.smooth = tk.Entry(child,font = self.text_font)
+        self.smooth.grid(row=8,column=1,pady=5,padx=5)
 
         describe = tk.Button(child,text="Plot stocks", width = 10, font = self.button_font, command = lambda: self.get_macd(self.dict2, self.stock_macd.get(), self.fema.get(), self.sema.get(), self.smooth.get())).grid(row=9,column=1,pady=5,padx=5)
 
@@ -291,10 +323,12 @@ class ChooseStock:
     def rsi(self):
         child = tk.Toplevel(self.master)
         stock_rsi = tk.Label(child,text="For which stock do you wish to make your analysis: " + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
-        self.stock_rsi = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
+        self.stock_rsi = tk.Entry(child,font = self.text_font)
+        self.stock_rsi.grid(row=2,column=1,pady=5,padx=5)
         
         sma_win = tk.Label(child,text="Please select the Window Size: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
-        self.sma_win = tk.Entry(child,font = self.text_font).grid(row=4,column=1,pady=5,padx=5)
+        self.sma_win = tk.Entry(child,font = self.text_font)
+        self.sma_win.grid(row=4,column=1,pady=5,padx=5)
 
         describe = tk.Button(child,text="Plot stocks", width = 10, font = self.button_font, command = lambda: self.get_rsi(self.dict2, self.stock_rsi.get(), self.sma_win.get())).grid(row=5,column=1,pady=5,padx=5)
 
@@ -305,7 +339,8 @@ class ChooseStock:
     def auto_c(self):
         child = tk.Toplevel(self.master)
         stock_raw = tk.Label(child,text="For which company do you wish to make your analysis: "+ ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
-        self.stock_raw = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
+        self.stock_raw = tk.Entry(child,font = self.text_font)
+        self.stock_raw.grid(row=2,column=1,pady=5,padx=5)
         
         describe = tk.Button(child,text="Plot Stock", width = 10, font = self.button_font, command = lambda: self.get_auto_c(self.dict2, self.stock_raw.get())).grid(row=3,column=1,pady=5,padx=5)
 
