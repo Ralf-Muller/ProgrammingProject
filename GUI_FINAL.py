@@ -363,7 +363,7 @@ class ChooseStock:
         tk.Button(child, width = 20, text= "Correlogram", font = self.button_font, command = self.correlograms).grid(row=1,column=1)
         tk.Button(child, width = 20, text= "ARIMA", font = self.button_font, command = self.arima_menu).grid(row=1,column=3)
         tk.Button(child, width = 20, text= "Cointegration", font = self.button_font, command = self.cointegration).grid(row=3,column=1)
-        tk.Button(child, width = 20, text= "Exponential smoothing", font = self.button_font).grid(row=3,column=3)
+        tk.Button(child, width = 20, text= "Exponential smoothing", font = self.button_font, command = self.exponential_menu).grid(row=3,column=3)
 
 
     def cointegration(self):
@@ -496,32 +496,55 @@ class ChooseStock:
         self.arima_res = stkts.make_arima(s_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_date)
         self.msg_window(self.arima_res)
         
-#stock = input("Feed me a stock name : ")
-#decis = input("Please tell me, do you want to work with close or adjusted close? \
-            #          Press 1 for Adjusted Close \
-             #         Press anything else for Close")
-#order_p = input("Feed me the AR order p : ")
-#order_dif = input("Feed me the Differences order d : ")
-#order_q = input("Feed me the MA order q : ")
-#pred_days = input("Please feed me the days to predict : ")
-#start_date = input("Feed a date to start the prediction YYYY-MM-DD: ")
-#make_arima(s_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_date) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         
+    def exponential_menu(self):
+        
+        child = tk.Toplevel(self.master)
+
+        self.stock_exp = tk.StringVar()
+        self.decis_exp = tk.StringVar()
+        self.user_exp = tk.StringVar()
+        self.damp_exp = tk.StringVar()
+        self.smooth_exp = tk.StringVar()
+        self.end_date_exp = tk.StringVar()
+        self.start_date_exp = tk.StringVar()
+        
+        tk.Label(child,text = "Please give me the stock : ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.stock_exp).grid(row = 2, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Feed a date to start the prediction YYYY-MM-DD \
+                 PLEASE WRITE A DATE LATER THAN THE FIRST AVAILABLE DATE", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.start_date_exp).grid(row = 4, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Feed a date to end the prediction YYYY-MM-DD: \
+                 PLEASE WRITE A DATE LATER THAN THE FIRST AVAILABLE DATE", font = self.text_font).grid(row = 5, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.end_date_exp).grid(row = 6, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Please feed me a smoothing level for Simple Exponential Smoothing : ", font = self.text_font).grid(row = 7, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.smooth_exp).grid(row = 8, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Please feed me a damping slope for Holt's Additive Model : ", font = self.text_font).grid(row = 9, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.damp_exp).grid(row = 10, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Please write the options you want: \n \
+                 Ex. '01234' \n \
+                 0. Simple Exponential Smoothing \n \
+                 1. Holt Standard \n \
+                 2. Holt Exponential \n \
+                 3. Holt Additive Damped \n \
+                 4. Holt Multiplicative Damped ", font = self.text_font).grid(row = 11, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.user_exp).grid(row = 12, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Input 1 for Adjusted Close and anything else for Close " , font = self.text_font).grid(row = 13, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.decis_exp).grid(row = 14, column = 1, pady=5, padx=5)
+        
+        tk.Button(child,text="Produce Graphs", width = 10, font = self.button_font, command = lambda : self.exp_maker(
+                self.dict, self.stock_exp.get(), self.decis_exp.get(), 
+                self.start_date_exp.get(), self.end_date_exp.get(), self.smooth_exp.get(),
+                self.damp_exp.get(), self.user_exp.get())).grid(row = 15, column = 1, pady=10, padx=10)
+    
+    def exp_maker(self, s_dict, stock, decis, start_date, end_date, smooth, damp, user_choice):
+        stkts.exponential_graphs(s_dict, stock, decis, start_date, end_date, smooth, damp, user_choice)
      
     def msg_window(self, msg):
         #Create message window
