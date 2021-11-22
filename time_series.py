@@ -1,6 +1,7 @@
 #References:
 #Copy and differences, astype  from Pandas documentation
 #ACF and PACF functions from the Statsmodels documentation
+#Help with correlograms from: https://www.statsmodels.org/dev/examples/notebooks/generated/tsa_arma_0.html
 #Actual ARIMA https://www.machinelearningplus.com/time-series/arima-model-time-series-forecasting-python/
 #ARIMA PLOT HELP: https://docs.w3cub.com/statsmodels/generated/statsmodels.tsa.arima_model.arimaresults.plot_predict
 #Code for exponential and Holt methods https://www.statsmodels.org/dev/examples/notebooks/generated/exponential_smoothing.html?highlight=exponential%20smoothing#Simple-Exponential-Smoothing
@@ -120,7 +121,7 @@ def make_arima(stock_dict, stock, decis, order_p, order_dif, order_q, pred_days,
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     model = ARIMA(cur_seri.dropna(), order = (order_p, order_dif, order_q)) 
     res = model.fit()
-    print(res.summary())
+    results = res.summary()
     fig, ax = plt.subplots()
     #ax = cur_seri[start_date:].plot(ax = ax)
     try:
@@ -131,7 +132,7 @@ def make_arima(stock_dict, stock, decis, order_p, order_dif, order_q, pred_days,
     except ValueError:
         raise tk.messagebox.showerror("Error", "Start Date is above the latest date available.")
     plt.show()
-    
+    return results
 
 
 def co_integration(stock_dict, stock1, stock2, decis):

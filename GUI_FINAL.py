@@ -157,6 +157,9 @@ class ChooseStock:
 
 
 ## OLS
+        
+    
+    
     def ols_2_stocks(self):
         child = tk.Toplevel(self.master)
         stock_ols2 = tk.Label(child,text="For which stocks do you wish to make your analysis (separated with comma): " + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
@@ -349,35 +352,6 @@ class ChooseStock:
         vs.auto_correl(dict2, companies)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #TIME SERIES
     """Function for Time Series Menu"""
     
@@ -387,7 +361,7 @@ class ChooseStock:
         tk.Label(child, text="Welcome to the Time Series Menu", font = self.heading_font).grid(row= 0,column= 2)
 
         tk.Button(child, width = 20, text= "Correlogram", font = self.button_font, command = self.correlograms).grid(row=1,column=1)
-        tk.Button(child, width = 20, text= "ARIMA", font = self.button_font).grid(row=1,column=3)
+        tk.Button(child, width = 20, text= "ARIMA", font = self.button_font, command = self.arima_menu).grid(row=1,column=3)
         tk.Button(child, width = 20, text= "Cointegration", font = self.button_font, command = self.cointegration).grid(row=3,column=1)
         tk.Button(child, width = 20, text= "Exponential smoothing", font = self.button_font).grid(row=3,column=3)
 
@@ -468,7 +442,7 @@ class ChooseStock:
         
         #child = tk.Toplevel(self.master)
         
-        self.acf, self.pacf = stkts.correlogram(self.dict, stock, diff, lags, decis)
+        stkts.correlogram(self.dict, stock, diff, lags, decis)
         
         #canvas_acf = FigureCanvasTkAgg(self.acf, master = child)
         #canvas_acf.draw()
@@ -478,13 +452,60 @@ class ChooseStock:
         #canvas_pacf.draw()
         #canvas_pacf.get_tk_widget().grid(row = 2, column = 0, ipadx = 40, ipady = 20)
 
+    def arima_menu(self):
+        
+        child = tk.Toplevel(self.master)
+        
+        self.stock_arima = tk.StringVar()
+        self.decis_arima = tk.StringVar()
+        self.ord_q_arima = tk.StringVar()
+        self.ord_p_arima = tk.StringVar()
+        self.ord_d_arima = tk.StringVar()
+        self.pred_days_arima = tk.StringVar()
+        self.start_date_arima = tk.StringVar()
+        
+        
+        tk.Label(child,text = "Please give me the stock : ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.stock_arima).grid(row = 2, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Please give me the AR order p : ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.ord_p_arima).grid(row = 4, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Please give me the Differences order d : ", font = self.text_font).grid(row = 5, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.ord_d_arima).grid(row = 6, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Please give me the MA order q : ", font = self.text_font).grid(row = 7, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.ord_q_arima).grid(row = 8, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Please give me the number of days to predicts : ", font = self.text_font).grid(row = 9, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.pred_days_arima).grid(row = 10, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Please give me the start date of the prediction : ", font = self.text_font).grid(row = 11, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.start_date_arima).grid(row = 12, column = 1, pady=5, padx=5)
+
+        tk.Label(child,text = "Input 1 for Adjusted Close and anything else for Close " , font = self.text_font).grid(row = 13, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.decis_arima).grid(row = 14, column = 1, pady=5, padx=5)
+
+        tk.Button(child,text="Produce ARIMA", width = 10, font = self.button_font, command = lambda : self.arima_maker(
+                self.dict, self.stock_arima.get(), self.decis_arima.get(), 
+                self.ord_p_arima.get(), self.ord_d_arima.get(), self.ord_q_arima.get(),
+                self.pred_days_arima.get(), self.start_date_arima.get())).grid(row = 15, column = 1, pady=10, padx=10)
 
 
-
-
-
-
-
+    def arima_maker(self, s_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_date):
+        self.arima_res = stkts.make_arima(s_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_date)
+        self.msg_window(self.arima_res)
+        
+#stock = input("Feed me a stock name : ")
+#decis = input("Please tell me, do you want to work with close or adjusted close? \
+            #          Press 1 for Adjusted Close \
+             #         Press anything else for Close")
+#order_p = input("Feed me the AR order p : ")
+#order_dif = input("Feed me the Differences order d : ")
+#order_q = input("Feed me the MA order q : ")
+#pred_days = input("Please feed me the days to predict : ")
+#start_date = input("Feed a date to start the prediction YYYY-MM-DD: ")
+#make_arima(s_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_date) 
 
 
 
