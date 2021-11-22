@@ -466,17 +466,17 @@ class ChooseStock:
 
     def show_correlogram(self, s_dict, stock, diff, lags, decis):
         
-        child = tk.Toplevel(self.master)
+        #child = tk.Toplevel(self.master)
         
         self.acf, self.pacf = stkts.correlogram(self.dict, stock, diff, lags, decis)
         
-        canvas_acf = FigureCanvasTkAgg(self.acf, master = child)
-        canvas_acf.draw()
-        canvas_acf.get_tk_widget().grid(row = 1, column = 0, ipadx = 40, ipady = 20)
+        #canvas_acf = FigureCanvasTkAgg(self.acf, master = child)
+        #canvas_acf.draw()
+        #canvas_acf.get_tk_widget().grid(row = 1, column = 0, ipadx = 40, ipady = 20)
         
-        canvas_pacf = FigureCanvasTkAgg(self.pacf, master = child)
-        canvas_pacf.draw()
-        canvas_pacf.get_tk_widget().grid(row = 2, column = 0, ipadx = 40, ipady = 20)
+        #canvas_pacf = FigureCanvasTkAgg(self.pacf, master = child)
+        #canvas_pacf.draw()
+        #canvas_pacf.get_tk_widget().grid(row = 2, column = 0, ipadx = 40, ipady = 20)
 
 
 
