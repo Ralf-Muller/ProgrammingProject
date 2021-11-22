@@ -120,9 +120,7 @@ class ChooseStock:
         companies = stocks.split(',')
         ols2str = stkols.sk_predval_OLS(dict2, companies, t_size, date)
         self.msg_window(ols2str)
-        #img = tk.PhotoImage(file=r'C:\Users\ralfm\Desktop\Programming Project\ols_regression.png')
-        #txt = "Test Table"
-        #self.img_window(txt, img)
+
     
     def raw_ts(self):
         child = tk.Toplevel(self.master)
@@ -137,16 +135,6 @@ class ChooseStock:
     def get_raw(self, dict2, company):       
         companies = company.split(',')
         vs.raw_time_series(dict2, companies)
-        txt = "Raw Time Series"
-        img = tk.PhotoImage(file=r'C:\Users\ralfm\Desktop\Programming Project\Raw_ts.png')
-        self.img_window(txt, img)        
-    
-    def img_window(self, txt, img):
-        child = tk.Toplevel(self.master)
-        title = tk.Label(child, text = txt, font = self.text_font)
-        title.pack(pady = 10, padx=10)
-        table = tk.Label(child, image=img)
-        table.pack()
 
     def trend(self):
         child = tk.Toplevel(self.master)
@@ -166,9 +154,7 @@ class ChooseStock:
     def get_trend(self, dict2, stocks, t_size): 
         companies = stocks.split(',')
         vs.plot_trend_line(dict2, companies, t_size)
-        img = tk.PhotoImage(file=r'C:\Users\ralfm\Desktop\Programming Project\ols_regression.png')
-        txt = "Trend Line"
-        self.img_window(txt, img)
+
      
     def sma(self):
         child = tk.Toplevel(self.master)
@@ -188,9 +174,7 @@ class ChooseStock:
     def get_sma(self, dict2, stocks, win_size): 
         companies = stocks.split(',')
         vs.plot_sma(dict2, companies, win_size)
-        img = tk.PhotoImage(file=r'C:\Users\ralfm\Desktop\Programming Project\moving_averages.png')
-        txt = "Moving Averages"
-        self.img_window(txt, img)   
+ 
         
     def wma(self):
         child = tk.Toplevel(self.master)
@@ -210,9 +194,7 @@ class ChooseStock:
     def get_wma(self, dict2, stocks, win_size): 
         companies = stocks.split(',')
         vs.plot_wma(dict2, companies, win_size)
-        img = tk.PhotoImage(file=r'C:\Users\ralfm\Desktop\Programming Project\wma.png')
-        txt = "Weighted Moving Averages"
-        self.img_window(txt, img)    
+
      
     def bollinger(self):
         child = tk.Toplevel(self.master)
@@ -237,9 +219,7 @@ class ChooseStock:
     def get_bollinger(self, dict2, stocks, win_size, stdev): 
         companies = stocks.split(',')
         vs.plot_bollinger(dict2, companies, win_size, stdev)
-        img = tk.PhotoImage(file=r'C:\Users\ralfm\Desktop\Programming Project\bollinger_bands.png')
-        txt = "Bollinger Bands"
-        self.img_window(txt, img)       
+     
      
     def macd(self):
         child = tk.Toplevel(self.master)
@@ -269,9 +249,7 @@ class ChooseStock:
     def get_macd(self, dict2, stocks, fema, sema, smooth): 
         companies = stocks.split(',')
         vs.plot_macd(dict2, companies, fema, sema, smooth)
-        img = tk.PhotoImage(file=r'C:\Users\ralfm\Desktop\Programming Project\macd.png')
-        txt = "Moving Average Convergence Divergence"+companies[0]
-        self.img_window(txt, img)      
+    
      
     def rsi(self):
         child = tk.Toplevel(self.master)
@@ -291,9 +269,7 @@ class ChooseStock:
     def get_rsi(self, dict2, stocks, win_size): 
         companies = stocks.split(',')
         vs.plot_rsi(dict2, companies, win_size)
-        img = tk.PhotoImage(file=r'C:\Users\ralfm\Desktop\Programming Project\rsi.png')
-        txt = "Relative Strength Index"
-        self.img_window(txt, img)       
+   
 
     def auto_c(self):
         child = tk.Toplevel(self.master)
@@ -308,9 +284,7 @@ class ChooseStock:
     def get_auto_c(self, dict2, company):       
         companies = company.split(',')
         vs.auto_correl(dict2, companies)
-        txt = "Autocorrelation"
-        img = tk.PhotoImage(file=r'C:\Users\ralfm\Desktop\Programming Project\autocorrelation.png')
-        self.img_window(txt, img) 
+
 
      #RALF
     def describe_symbol(self):

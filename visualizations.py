@@ -60,8 +60,7 @@ def raw_time_series(stocks, company):
     plt.title('Raw Time Series '+ company[0],fontsize=18)
     plt.xlabel('Date', fontsize = 10)
     plt.ylabel('Adj. Closing Price', fontsize = 10)
-    plt.savefig('Raw_ts.png')
-    plt.show()
+    #plt.savefig('Raw_ts.png')
 
 # Returns the trend line for the data series
 def plot_trend_line(stocks, company, t_size, size = 1):
@@ -89,7 +88,7 @@ def plot_sma(stocks, company, win_size):
     plt.plot(month, price, label="Closing Prices")
     plt.plot(month, sma, label=str(win_size)+' Day SMA')
     plt.legend()
-    plt.savefig('moving_averages.png')
+    #plt.savefig('moving_averages.png')
 
 # Plotting Bollinger Bands
 def bollinger_band(stocks, company, win_size, stdev):
@@ -111,7 +110,7 @@ def plot_bollinger(stocks, company, win_size, stdev):
     plt.plot(month, upper_b, label='Bollinger Up', c='g')
     plt.plot(month, lower_b, label='Bollinger Down', c='r')
     plt.legend()
-    plt.savefig('bollinger_bands.png')
+    #plt.savefig('bollinger_bands.png')
 
 # Plot Weighted Moving Averages from Data Set
 def plot_wma(stocks, company, win_size):
@@ -127,7 +126,7 @@ def plot_wma(stocks, company, win_size):
     plt.plot(month, price, label="Closing Prices")
     plt.plot(month, wma, label=str(win_size)+' Day WMA')
     plt.legend()
-    plt.savefig('wma.png')
+    #plt.savefig('wma.png')
 
 # Plot MACD of time series
 # The code for MACD adapted for the project was obtained from https://medium.com/codex/algorithmic-trading-with-macd-in-python-1c2769a6ad1b
@@ -162,7 +161,7 @@ def plot_macd(stocks, company, fema, sema, smooth):
             ax2.bar(price.index[i], hist[i], color = '#26a69a')
 
     plt.legend(loc = 'lower right')
-    plt.savefig('macd.png')
+    #plt.savefig('macd.png')
 
 # Plot Relative Strength Index for the selected Stock
 # The code was adapted to the program from https://tcoil.info/compute-rsi-for-stocks-with-python-relative-strength-index/
@@ -195,7 +194,7 @@ def plot_rsi(stocks, company, win_size):
     plt.axhline(70, linestyle='--', color='grey')
     plt.axhline(80, linestyle='--', alpha=0.5, color = 'red')
     plt.axhline(100, linestyle='--', alpha=0.1)
-    plt.savefig('rsi.png')
+    #plt.savefig('rsi.png')
 
 # Plot Autocorrelation from Stock
 def auto_correl(stocks, company):
@@ -204,4 +203,4 @@ def auto_correl(stocks, company):
     graph = pd.plotting.autocorrelation_plot(price)
     plt.title('Autocorrelation Plot '+ company[0],fontsize=18)
     graph.plot()
-    plt.savefig('autocorrelation.png')
+    #plt.savefig('autocorrelation.png')

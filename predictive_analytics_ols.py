@@ -48,7 +48,7 @@ def gen_model(stocks, company, t_size, size):
     if size == 1:
         targets, inputs = get_price_date(stocks, company[0])
     elif size == 2:
-        targets = stocks[company]['5. adjusted close']
+        targets = stocks[company[0]]['5. adjusted close']
         inputs = stocks[company[1]]['5. adjusted close']
     inputs2 = sm.add_constant(inputs) # Transform the data to add the constant value
     x_train, x_test, y_train, y_test = train_test_split(inputs2, targets, test_size=t_size, random_state=365)
@@ -70,7 +70,7 @@ def plot_OLS1(inputs, targets, predicted_v, reg, company, month):
     plt.ylabel('Price', fontsize = 10)
     plt.legend()
     #plt.savefig('ols_regression.png')
-    #plt.show()
+    plt.show()
 
 # Plotting the results from the regression model vs. the original scatterplot of stock1 vs. stock2
 def plot_OLS2(inputs, targets, predicted_v, reg, company, company2):
@@ -81,17 +81,17 @@ def plot_OLS2(inputs, targets, predicted_v, reg, company, company2):
     plt.ylabel(company, fontsize = 10)     
     plt.legend()
     #plt.savefig('ols2stocks.png')
-    #plt.show()
+    plt.show()
 
 # Plot the values from the model vs. the real values
 def plot_yhat_v_y(x_train, y_train, reg):
     y_hat = reg.predict(x_train)
     plt.scatter(y_train, y_hat)
     plt.title('Expected Results vs. Real Results',fontsize=18)
-    plt.xlabel('Real Values',fontsize=10)
-    plt.ylabel('Model Predictions',fontsize=10)
+    #plt.xlabel('Real Values',fontsize=10)
+    #plt.ylabel('Model Predictions',fontsize=10)
     #plt.savefig('y_train_v_y_hat.png')
-    #plt.show() 
+    plt.show() 
 
 # Function to validate if Symbol is in the downloaded dictionary
 def val_company(stocks,companies):

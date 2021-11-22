@@ -17,6 +17,8 @@ from tkinter import ttk
 import time_series as stkts
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+import date_as_floating_value as datef
+import visualizations as vs
 #key: 7QJ0OD6RU5IEVRO4
 
 
@@ -170,7 +172,10 @@ class ChooseStock:
         
         describe = tk.Button(child,text="Analyse stocks", width = 10, font = self.button_font, command = lambda: self.get_ols2(self.dict2, self.stock_ols2.get(), self.stock_olst.get())).grid(row=5,column=1,pady=5,padx=5)
 
-
+    def get_ols2(self, dict2, stocks, t_size):       
+        companies = stocks.split(',')
+        ols2str = stkols.OLS_two_stocks(dict2, companies, t_size)
+        self.msg_window(ols2str)
 
 
     def ols_1_stock(self):
@@ -186,6 +191,11 @@ class ChooseStock:
         
         describe = tk.Button(child,text="Analyse stocks", width = 10, font = self.button_font, command = lambda: self.get_ols(self.dict2, self.stock_ols.get(), self.stock_olst.get(), self.dateols.get())).grid(row=7,column=1,pady=5,padx=5)
 
+    def get_ols(self, dict2, stocks, t_size, date): 
+        companies = stocks.split(',')
+        ols2str = stkols.sk_predval_OLS(dict2, companies, t_size, date)
+        self.msg_window(ols2str)
+
  ## Visualisations
 
     def raw_ts(self):
@@ -194,7 +204,10 @@ class ChooseStock:
         self.stock_raw = tk.Entry(child,font = self.text_font).grid(row=2,column=1,pady=5,padx=5)
         
         describe = tk.Button(child,text="Plot Stock", width = 10, font = self.button_font, command = lambda: self.get_raw(self.dict2, self.stock_raw.get())).grid(row=3,column=1,pady=5,padx=5)
-  
+
+    def get_raw(self, dict2, company):       
+        companies = company.split(',')
+        vs.raw_time_series(dict2, companies)    
     
     
     def trend(self):
@@ -207,6 +220,10 @@ class ChooseStock:
         
         describe = tk.Button(child,text="Plot Stock", width = 10, font = self.button_font, command = lambda: self.get_trend(self.dict2, self.s_trend.get(), self.stock_olst.get())).grid(row=5,column=1,pady=5,padx=5)
 
+    def get_trend(self, dict2, stocks, t_size): 
+        companies = stocks.split(',')
+        vs.plot_trend_line(dict2, companies, t_size)
+
 
     def sma(self):
         child = tk.Toplevel(self.master)
@@ -218,7 +235,9 @@ class ChooseStock:
 
         describe = tk.Button(child,text="Plot stocks", width = 10, font = self.button_font, command = lambda: self.get_sma(self.dict2, self.stock_sma.get(), self.sma_win.get())).grid(row=5,column=1,pady=5,padx=5)
 
-
+    def get_sma(self, dict2, stocks, win_size): 
+        companies = stocks.split(',')
+        vs.plot_sma(dict2, companies, win_size)
 
     def wma(self):
         child = tk.Toplevel(self.master)
@@ -230,7 +249,9 @@ class ChooseStock:
 
         describe = tk.Button(child,text="Plot stocks", width = 10, font = self.button_font, command = lambda: self.get_wma(self.dict2, self.stock_wma.get(), self.wma_win.get())).grid(row=4,column=1,pady=5,padx=5)
 
-
+    def get_wma(self, dict2, stocks, win_size): 
+        companies = stocks.split(',')
+        vs.plot_wma(dict2, companies, win_size)
 
     def bollinger(self):
         child = tk.Toplevel(self.master)
@@ -243,7 +264,9 @@ class ChooseStock:
         stdev = tk.Label(child,text='How many standard deviations away from the mean do you wish to calculate? ', font = self.text_font).grid(row=5,column=1,pady=5,padx=5)
         self.stdev = tk.Entry(child,font = self.text_font).grid(row=6,column=1,pady=5,padx=5)
 
-
+    def get_bollinger(self, dict2, stocks, win_size, stdev): 
+        companies = stocks.split(',')
+        vs.plot_bollinger(dict2, companies, win_size, stdev)
 
     def macd(self):
         child = tk.Toplevel(self.master)
@@ -261,7 +284,9 @@ class ChooseStock:
 
         describe = tk.Button(child,text="Plot stocks", width = 10, font = self.button_font, command = lambda: self.get_macd(self.dict2, self.stock_macd.get(), self.fema.get(), self.sema.get(), self.smooth.get())).grid(row=9,column=1,pady=5,padx=5)
 
-    
+    def get_macd(self, dict2, stocks, fema, sema, smooth): 
+        companies = stocks.split(',')
+        vs.plot_macd(dict2, companies, fema, sema, smooth)    
 
     def rsi(self):
         child = tk.Toplevel(self.master)
@@ -273,7 +298,9 @@ class ChooseStock:
 
         describe = tk.Button(child,text="Plot stocks", width = 10, font = self.button_font, command = lambda: self.get_rsi(self.dict2, self.stock_rsi.get(), self.sma_win.get())).grid(row=5,column=1,pady=5,padx=5)
 
-    
+    def get_rsi(self, dict2, stocks, win_size): 
+        companies = stocks.split(',')
+        vs.plot_rsi(dict2, companies, win_size)    
 
     def auto_c(self):
         child = tk.Toplevel(self.master)
@@ -282,7 +309,9 @@ class ChooseStock:
         
         describe = tk.Button(child,text="Plot Stock", width = 10, font = self.button_font, command = lambda: self.get_auto_c(self.dict2, self.stock_raw.get())).grid(row=3,column=1,pady=5,padx=5)
 
-
+    def get_auto_c(self, dict2, company):       
+        companies = company.split(',')
+        vs.auto_correl(dict2, companies)
 
 
 

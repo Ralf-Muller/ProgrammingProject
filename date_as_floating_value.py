@@ -14,5 +14,3 @@ def _mutate_date_(stocks):
         stocks[company]["time"] = pd.to_numeric(temp_time, errors='coerce')
         stocks[company].rename(columns = {'index':'date'}, inplace = True)
     return stocks
-
-stock_dict2 = _mutate_date_(copy.deepcopy(s_dict))
