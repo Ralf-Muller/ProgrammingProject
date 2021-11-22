@@ -186,7 +186,7 @@ class ChooseStock:
         
         describe = tk.Button(child,text="Analyse stocks", width = 10, font = self.button_font, command = lambda: self.get_ols(self.dict2, self.stock_ols.get(), self.stock_olst.get(), self.dateols.get())).grid(row=7,column=1,pady=5,padx=5)
 
-
+ ## Visualisations
 
     def raw_ts(self):
         child = tk.Toplevel(self.master)
