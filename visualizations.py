@@ -1,8 +1,12 @@
+#Importing All Relevant libraries for the visualization
 import matplotlib.pyplot as plt
 import predictive_analytics_ols as stkols
 import tkinter as tk
 import numpy as np
 import pandas as pd
+import seaborn as sns
+
+sns.set() # Setting the Matplotlib graphs as seaborn
 
 # Function to get the window for the data visualization
 def val_window(win_size):
@@ -15,6 +19,7 @@ def val_window(win_size):
         break
     return win_size
 
+
 # Get the Standard Deviation for the Bollinger Bands
 def val_std(st_dev):
     while True:
@@ -26,6 +31,7 @@ def val_std(st_dev):
         break
     return num_std
 
+
 # Testing if the inputs for the MACD are numbers
 def get_ema(emas):
     while True:
@@ -36,6 +42,7 @@ def get_ema(emas):
             continue
         break
     return ema
+
 
 #Function to obtain data for the MACD
 def val_data_macd(fema, sema, smooth):
@@ -50,6 +57,7 @@ def val_data_macd(fema, sema, smooth):
     smooth = get_ema(smooth)
     return fema, sema, smooth
 
+
 # Returns the Raw Time Series of the Selected Stock
 def raw_time_series(stocks, company): 
     #company = get_company(stocks)
@@ -62,6 +70,7 @@ def raw_time_series(stocks, company):
     plt.ylabel('Adj. Closing Price', fontsize = 10)
     #plt.savefig('Raw_ts.png')
 
+
 # Returns the trend line for the data series
 def plot_trend_line(stocks, company, t_size, size = 1):
     stkols.val_company(stocks, company)    
@@ -70,12 +79,14 @@ def plot_trend_line(stocks, company, t_size, size = 1):
     reg, predicted_v = stkols.model_OLS(inputs, x_train, y_train)
     stkols.plot_OLS1(inputs, targets, predicted_v, reg, company[0], month)
 
+
 # Plot Moving Averages for Stocks given a Window Time
 def moving_averages(stocks, company, win_size):
     price, date = stkols.get_price_date(stocks, company[0])
     sma = price.rolling(window =win_size).mean()
     std = price.rolling(window =win_size).std()
     return sma, std, price
+
 
 def plot_sma(stocks, company, win_size):
     stkols.val_company(stocks, company)
@@ -90,6 +101,7 @@ def plot_sma(stocks, company, win_size):
     plt.legend()
     #plt.savefig('moving_averages.png')
 
+
 # Plotting Bollinger Bands
 def bollinger_band(stocks, company, win_size, stdev):
     stkols.val_company(stocks, company)
@@ -99,6 +111,7 @@ def bollinger_band(stocks, company, win_size, stdev):
     upper_b = sma + std * num_std
     lower_b = sma - std * num_std
     return upper_b , lower_b
+
 
 def plot_bollinger(stocks, company, win_size, stdev):
     upper_b , lower_b = bollinger_band(stocks, company, win_size, stdev)
@@ -111,6 +124,7 @@ def plot_bollinger(stocks, company, win_size, stdev):
     plt.plot(month, lower_b, label='Bollinger Down', c='r')
     plt.legend()
     #plt.savefig('bollinger_bands.png')
+
 
 # Plot Weighted Moving Averages from Data Set
 def plot_wma(stocks, company, win_size):
@@ -128,6 +142,7 @@ def plot_wma(stocks, company, win_size):
     plt.legend()
     #plt.savefig('wma.png')
 
+
 # Plot MACD of time series
 # The code for MACD adapted for the project was obtained from https://medium.com/codex/algorithmic-trading-with-macd-in-python-1c2769a6ad1b
 def obtain_macd(stocks, company, fema, sema, smooth):
@@ -142,6 +157,7 @@ def obtain_macd(stocks, company, fema, sema, smooth):
     frames =  [date, macd, signal, hist]
     macd_df = pd.concat(frames, join = 'inner', axis = 1)
     return macd_df, price
+
 
 def plot_macd(stocks, company, fema, sema, smooth):
     macd_df, price = obtain_macd(stocks, company, fema, sema, smooth)
@@ -163,6 +179,7 @@ def plot_macd(stocks, company, fema, sema, smooth):
     plt.legend(loc = 'lower right')
     #plt.savefig('macd.png')
 
+
 # Plot Relative Strength Index for the selected Stock
 # The code was adapted to the program from https://tcoil.info/compute-rsi-for-stocks-with-python-relative-strength-index/
 def obtain_rsi(stocks, company, win_size, date, price):
@@ -176,6 +193,7 @@ def obtain_rsi(stocks, company, win_size, date, price):
     rsn = gain_avg/loss_avg # RSN esquals average gain over period divided by average loss in period
     RSI = 100 - (100/(1+abs(rsn)))
     return RSI
+
 
 def plot_rsi(stocks, company, win_size):
     stkols.val_company(stocks, company)
@@ -195,6 +213,7 @@ def plot_rsi(stocks, company, win_size):
     plt.axhline(80, linestyle='--', alpha=0.5, color = 'red')
     plt.axhline(100, linestyle='--', alpha=0.1)
     #plt.savefig('rsi.png')
+
 
 # Plot Autocorrelation from Stock
 def auto_correl(stocks, company):

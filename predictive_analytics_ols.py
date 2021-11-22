@@ -10,7 +10,7 @@ import stk_requestF as stkr
 import tkinter as tk
 import dataframe_image as dfi
 
-sns.set()
+sns.set() # Setting the Matplotlib graphs as seaborn
 
 ''' Generate a simple OLS regression model for one data set
     The basis for the OLS model was obtained through the knowledge acquired in the Udemy Course:
@@ -39,6 +39,7 @@ def sk_simple_OLS(stocks, company, t_size, size):
     
     return RSME, R2, reg
 
+
 # Generate the SKLearn OLS model to generate the graphs and obtain the results based on 1 or 2 stocks
 def gen_model(stocks, company, t_size, size):
     # Import library to split the data into test and training values
@@ -54,6 +55,7 @@ def gen_model(stocks, company, t_size, size):
     x_train, x_test, y_train, y_test = train_test_split(inputs2, targets, test_size=t_size, random_state=365)
     return inputs, targets, x_train, x_test, y_train, y_test
 
+
 # Generate the Basic Statsmodels OLS to generate the graphs and obtain the results
 def model_OLS(inputs, x_train, y_train):
     reg = LinearRegression()
@@ -61,37 +63,44 @@ def model_OLS(inputs, x_train, y_train):
     predicted_v = inputs*reg.coef_[1]+reg.intercept_
     return reg, predicted_v
 
+
 # Plotting the results from the regression model vs. the original scatterplot of date vs. price
 def plot_OLS1(inputs, targets, predicted_v, reg, company, month):
+    plt.figure(0)
     plt.scatter(month,targets)
-    fig = plt.plot(month,predicted_v, lw=3, c='red', label ='OLS Regression')
+    plt.plot(month,predicted_v, lw=3, c='red', label ='OLS Regression')
     plt.title('Trend Line ' + company,fontsize=18)
     plt.xlabel('Date', fontsize = 10)
     plt.ylabel('Price', fontsize = 10)
     plt.legend()
-    #plt.savefig('ols_regression.png')
     plt.show()
+    #plt.savefig('ols_regression.png')
+
 
 # Plotting the results from the regression model vs. the original scatterplot of stock1 vs. stock2
 def plot_OLS2(inputs, targets, predicted_v, reg, company, company2):
+    plt.figure(1)
     plt.scatter(inputs,targets)
-    fig = plt.plot(inputs,predicted_v, lw=3, c='red', label ='OLS Regression')
+    plt.plot(inputs,predicted_v, lw=3, c='red', label ='OLS Regression')
     plt.title('Correlation Between Compan Stocks: ' + company + ' vs. ' + company2,fontsize = 14)
     plt.xlabel(company2, fontsize = 10)
     plt.ylabel(company, fontsize = 10)     
     plt.legend()
-    #plt.savefig('ols2stocks.png')
     plt.show()
+    #plt.savefig('ols2stocks.png')
+
 
 # Plot the values from the model vs. the real values
 def plot_yhat_v_y(x_train, y_train, reg):
     y_hat = reg.predict(x_train)
+    plt.figure(2)
     plt.scatter(y_train, y_hat)
     plt.title('Expected Results vs. Real Results',fontsize=18)
-    #plt.xlabel('Real Values',fontsize=10)
-    #plt.ylabel('Model Predictions',fontsize=10)
-    #plt.savefig('y_train_v_y_hat.png')
-    plt.show() 
+    plt.xlabel('Real Values',fontsize=10)
+    plt.ylabel('Model Predictions',fontsize=10)
+    plt.savefig('y_train_v_y_hat.png')
+    plt.show()
+
 
 # Function to validate if Symbol is in the downloaded dictionary
 def val_company(stocks,companies):
@@ -99,16 +108,19 @@ def val_company(stocks,companies):
         if company not in list(stocks):
             raise tk.messagebox.showerror("Error", "Stock not found in downloaded data. Did you use the correct symbol? Please try again")
 
+
 #Function to obtain the date & prices for each graph
 def get_price_date(stocks, company):
     price = stocks[company]['5. adjusted close']
     date = stocks[company]['time']
     return price, date
 
+
 # Obtain the datetime format data to plot each of the graphs
 def get_month(stocks, company):
     month = stocks[company]['date']
     return month
+
 
 # Obtain the test size for the regression model
 def val_t_size(t_size):
@@ -122,6 +134,7 @@ def val_t_size(t_size):
             continue
         break
     return t_size
+
 
 # This function is designed to test the model to new test data to guarantee the accuracy of the prediction
 def sk_test_OLS(x_test, y_test, reg):
@@ -147,7 +160,6 @@ def sk_predval_OLS(stocks, companies, t_size, date, size = 1):
         "\nThe coefficient of determination of the model is: " + str(round(R2,2))+\
         "\nThe RSME for the model is: " + str(round(RSME,2))    
     return str_ols
-
 
 
 # This function returns the correlation between two stocks
