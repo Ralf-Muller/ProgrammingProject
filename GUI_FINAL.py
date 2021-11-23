@@ -25,6 +25,8 @@ import visualizations as vs
 class ChooseStock:
     def __init__(self, master):
         self.master = master
+        
+        self.dict = {}
 
         master.title("Stock Analyser")
         master.geometry('1600x900')
@@ -107,7 +109,7 @@ class ChooseStock:
         tk.Label(child,text = "Please enter Alphavantage key : ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.key_enter).grid(row = 2, column = 1, pady=5, padx=5)
 
-        tk.Label(child,text="Please enter two company symbols (separated with comma): ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Label(child,text="Please enter a stock to download: ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.stocks_enter).grid(row = 4, column = 1, pady=5, padx=5)
 
         tk.Label(child,text = "Please enter start date in YYYY-MM-DD format: ", font = self.text_font).grid(row = 5, column = 1, pady=5, padx=5)
@@ -116,12 +118,12 @@ class ChooseStock:
         tk.Label(child,text = "Please enter end date in YYYY-MM-DD format: ", font = self.text_font).grid(row = 7, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.end_date_enter).grid(row = 8, column = 1, pady=5, padx=5)
 
-        tk.Button(child,text="Get Data", width = 10, font = self.button_font, command = lambda: self.req_to_frame(self.key_enter.get(), self.stocks_enter.get(), self.start_date_enter.get(), self.end_date_enter.get())).grid(row = 9, column = 1, pady=5, padx=5) 
+        tk.Button(child,text="Get Data", width = 10, font = self.button_font, command = lambda: self.req_to_frame(self.dict, self.key_enter.get(), self.stocks_enter.get(), self.start_date_enter.get(), self.end_date_enter.get())).grid(row = 9, column = 1, pady=5, padx=5) 
 
         
-    def req_to_frame(self, key, stock, start_date, end_date):
+    def req_to_frame(self, stock_dict, key, stock, start_date, end_date):
         #stkr.date_order(start_date, end_date)
-        self.dict = stkr.req_to_frame(key, stock, start_date, end_date)
+        self.dict = stkr.req_to_frame(stock_dict, key, stock, start_date, end_date)
         self.dict2 = datef._mutate_date_(copy.deepcopy(self.dict))
         self.msg_window("Operation Successful. Downloaded {} ".format(list(self.dict.keys()))) 
         
@@ -395,6 +397,8 @@ class ChooseStock:
 
 
     def coint_test(self, stk_dict, stock1, stock2, decis):
+        if stk_dict[stock1].index.equals(stk_dict[stock2].index) != True:
+            raise tk.messagebox.showerror("Error",'Dates do not match')
         self.coint_string = stkts.co_integration(stk_dict, stock1, stock2, decis)
         self.msg_window(self.coint_string)
 

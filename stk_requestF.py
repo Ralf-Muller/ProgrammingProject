@@ -64,31 +64,28 @@ def stock_exists(stock, key):
             return True
     return False
 
-def stock_query(key, stock, start_date, end_date):
+def stock_query(stock_dict, key, stock, start_date, end_date):
     #Asks the user for a key, date range, and stock 
     #and returns a dictionary with all the requested stocks
-    stock_dict = {}
     if key == '':
         raise tk.messagebox.showerror("Error",'Please enter a correct API Key')
     validate(start_date, end_date)
     date_order(start_date, end_date)
     funct = "TIME_SERIES_DAILY_ADJUSTED"
-    stocks = stock.split(",")
-    for symbol in stocks: 
-        if stock_exists(symbol, key) == False:
-            raise tk.messagebox.showerror("Error", "Stock not found. Please use Request Symbol Function to find correct stock") 
-        stock_dict[symbol] = 0  
-        url = 'https://www.alphavantage.co/query?function={}&symbol={}&outputsize=full&apikey={}'.format(\
-                                                  funct, symbol, key)
-        req_stk = requests.get(url)
-        stk_frame = req_stk.json()
-        stock_dict = date_slicer(stk_frame, stock_dict, symbol, start_date, end_date)
+    if stock_exists(stock, key) == False:
+        raise tk.messagebox.showerror("Error", "Stock not found. Please use Request Symbol Function to find correct stock") 
+    stock_dict[stock] = 0  
+    url = 'https://www.alphavantage.co/query?function={}&symbol={}&outputsize=full&apikey={}'.format(\
+                                                  funct, stock, key)
+    req_stk = requests.get(url)
+    stk_frame = req_stk.json()
+    stock_dict = date_slicer(stk_frame, stock_dict, stock, start_date, end_date)
     return stock_dict
     
     
-def req_to_frame(key, stock, start_date, end_date):
+def req_to_frame(stock_dict, key, stock, start_date, end_date):
     #Putting all together
-    stock_dict = stock_query(key, stock, start_date, end_date)
+    stock_dict = stock_query(stock_dict, key, stock, start_date, end_date)
     return stock_dict    
 
 
