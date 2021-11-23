@@ -42,6 +42,8 @@ class ChooseStock:
 
         self.enter = tk.Button(master, width = 20, text="Enter Company Symbol", font = self.button_font, command = self.enter_symbol).grid(row=3,column=2)
         
+        self.show = tk.Button(master, width = 20, text="Show Downloaded Stocks", font = self.button_font, command = self.show_me_all).grid(row=4,column=2)
+        
         self.h_sep = ttk.Separator(master, orient='horizontal').grid(row=6, column = 0, columnspan = 5,sticky= 'we', pady=10,padx=10)
 
         self.heading_1 = tk.Label(master, text="Descriptive Analytics", font = self.heading_font).grid(row=8,column=1, pady=10, padx=10)
@@ -51,6 +53,7 @@ class ChooseStock:
         self.v_sep = ttk.Separator(master,orient='vertical').grid(row=7,column=2,rowspan=5,sticky='ns')
 
         self.heading_2 = tk.Label(master, text="Predictive Analytics", font = self.heading_font).grid(row=8,column=3)
+        
         self.ols = tk.Button(master, width = 20, text="OLS", font=self.button_font, command = self.ols_menu).grid(row=9,column=3)
 
         self.stats = tk.Button(master, width = 20, text = "Basic Statistics", font = self.button_font, command = self.describe_symbol).grid(row= 10,column=1,pady=10,padx=10)
@@ -64,6 +67,14 @@ class ChooseStock:
 
         #Main buttons section
     """Functions for calling symbols"""
+    def show_me_all(self):
+        self.list = "Stock            Starting Date             Ending Date \n"
+        for stock in list(self.dict.keys()):
+            stock_info = "{}               {}               {} \n".format(stock, self.dict[stock].index.values[0], self.dict[stock].index.values[-1])
+            self.list += stock_info
+        self.msg_window(self.list)
+    
+    
 
     def find_symbol(self):
         # Inputs to find symbol
