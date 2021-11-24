@@ -15,10 +15,14 @@ def get_overview(stock, key):
     r = requests.get(url)
     info = r.json()
     
-    print('--'*50, '\nCompany overview:')
-    overview = pd.DataFrame(itemgetter('Symbol', 'Name', 'Country', 'Sector', 'Industry')(info), 
+    #print('--'*50, '\nCompany overview:')
+    #overview = pd.DataFrame(itemgetter('Symbol', 'Name', 'Country', 'Sector', 'Industry')(info), index = ['Symbol:', 'Name:', 'Country:', 'Sector:', 'Industry:'])
+    str_ov = str(
+                 pd.DataFrame(itemgetter('Symbol', 'Name', 'Country', 'Sector', 'Industry')(info), 
     index = ['Symbol:', 'Name:', 'Country:', 'Sector:', 'Industry:'])
-    print(overview)
+                 )
+    print(str_ov)
+    return str_ov
 
 
 
@@ -28,18 +32,23 @@ def get_description(s_dict, stock):
     #data = pd.read_csv('{} Data From {} to {}'.format(stock, start_date, end_date))
 
     #print('\nAdjusted closing price of {} from {} to {}:'.format(stock, values.index[0], values.index[-1]))
-    str_values = str('Mean               : ' + "%.2f" % np.mean(values) + '\n' + 
-          'Median             : ' + "%.2f" % np.median(values) + '\n' + 
-          'Standard deviation : ' + "%.2f" % statistics.stdev(values) + '\n' +
-          'Variance           : ' + "%.2f" % statistics.variance(values) + '\n' +
-          'Range              : from ' + "%.2f" % min(values) + ' to ' + "%.2f" % max(values) + '\n' +
-          'Q1 Quartiles       : ' + "%.2f" % np.quantile(values, .25, interpolation='midpoint') + '\n' +
-          'Q2 Quartiles       : ' + "%.2f" % np.quantile(values, .50, interpolation='midpoint') + '\n' +
-          'Q3 Quartiles       : ' + "%.2f" % np.quantile(values, .75, interpolation='midpoint') + '\n')
+    str_values = str('\n'+
+              'Mean               : ' + "%.2f" % np.mean(values) + '\n' + 
+              'Median             : ' + "%.2f" % np.median(values) + '\n' + 
+              'Standard deviation :' + "%.2f" % statistics.stdev(values) + '\n' +
+              'Variance           : ' + "%.2f" % statistics.variance(values) + '\n' +
+              'Range: from ' + "%.2f" % min(values) + ' to ' + "%.2f" % max(values) + '\n' +
+              'Q1 Quartiles       : ' + "%.2f" % np.quantile(values, .25, interpolation='midpoint') + '\n' +
+              'Q2 Quartiles       : ' + "%.2f" % np.quantile(values, .50, interpolation='midpoint') + '\n' +
+              ' Q3 Quartiles       : ' + "%.2f" % np.quantile(values, .75, interpolation='midpoint') + '\n'
+                  )
     print(str_values)
     return values, str_values
 
-
+#key = '7QJ0OD6RU5IEVRO4'
+#stock = 'TSM'
+#start_date = '2011-10-10'
+#end_date = '2013-01-01'
 #key = input("Please feed me your key for Alphavantage : ")
 #stock = input("Please feed me a company's stock name : ")
 #start_date = input("Please feed me the starting date in YYYY-MM-DD format: ")

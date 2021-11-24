@@ -6,11 +6,11 @@ import seaborn as sns
 sns.set()
 #key: 7QJ0OD6RU5IEVRO4
 
-def compare_stk(stocks): 
+def compare_stk(stocks, company1, company2): 
     print('\nPlease give me two campany to analyse their historical adj. price.')
-    company1 = get_company(stocks)
+    #company1 = get_company(stocks)
     price1 = get_price(stocks, company1)
-    company2 = get_company(stocks)
+    #company2 = get_company(stocks)
     price2 = get_price(stocks, company2)
     day = get_day(stocks, company1)
     
@@ -50,11 +50,11 @@ def get_day(stocks, company):
     #day = pd.date_range(start = start_d, end = end_d).tolist()
     return day
 
-key         = input("Please feed me your key for Alphavantage : ")
-stock       = input("Please feed me a company's stock name : ")
-start_date  = input("Please feed me the starting date in YYYY-MM-DD format: ")
-end_date    = input("Please feed me the ending date in YYYY-MM-DD format: ")
+#key         = input("Please feed me your key for Alphavantage : ")
+#stock       = input("Please feed me a company's stock name : ")
+#start_date  = input("Please feed me the starting date in YYYY-MM-DD format: ")
+#end_date    = input("Please feed me the ending date in YYYY-MM-DD format: ")
 
-s_dict = sr.req_to_frame(key, stock, start_date, end_date)
+#s_dict = sr.req_to_frame(key, stock, start_date, end_date)
 
-compare_stk(s_dict)
+#compare_stk(s_dict)

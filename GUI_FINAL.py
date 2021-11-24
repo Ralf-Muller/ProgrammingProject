@@ -11,6 +11,7 @@ import pandas as pd
 import datetime
 import stk_requestF as stkr
 import stock_info as stki
+import stock_compare as stkc
 import predictive_analytics_ols as stkols
 import stock_lookup as stkl
 from tkinter import ttk
@@ -48,7 +49,7 @@ class ChooseStock:
 
         self.heading_1 = tk.Label(master, text="Descriptive Analytics", font = self.heading_font).grid(row=8,column=1, pady=10, padx=10)
         
-        self.descr = tk.Button(master, width = 20, text="Company Description", font = self.button_font).grid(row=9,column=1,pady=10,padx=10)
+        self.descr = tk.Button(master, width = 20, text= "Company Description", font = self.button_font, command = self.overview_symbol).grid(row=9,column=1,pady=10,padx=10)
 
         self.v_sep = ttk.Separator(master,orient='vertical').grid(row=7,column=2,rowspan=5,sticky='ns')
 
@@ -56,8 +57,8 @@ class ChooseStock:
         
         self.ols = tk.Button(master, width = 20, text="OLS", font=self.button_font, command = self.ols_menu).grid(row=9,column=3)
 
-        self.stats = tk.Button(master, width = 20, text = "Basic Statistics", font = self.button_font, command = self.describe_symbol).grid(row= 10,column=1,pady=10,padx=10)
-
+        self.stats = tk.Button(master, width = 20, text = "Basic Statistics", font = self.button_font, command = self.basic_menu).grid(row= 10,column=1,pady=10,padx=10)
+        
         self.visualization = tk.Button(master, width = 20, text = "Visualization", font = self.button_font, command=self.visualisations_menu).grid(row=11,column=1,pady=10,padx=10)
         
         self.time_series = tk.Button(master, width = 20, text = "Time Series", font = self.button_font, command = self.time_series_menu).grid(row=10,column=3,pady=10,padx=10)
@@ -141,6 +142,38 @@ class ChooseStock:
     """Functions for getting a stock basic statistics"""
     
     
+    def overview_symbol(self):
+        
+        child = tk.Toplevel(self.master)
+        
+        self.stock_d = tk.StringVar()
+        self.key = tk.StringVar()
+        
+        tk.Label(child,text = "Please enter Alphavantage key : ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.key).grid(row = 2, column = 1, pady=5, padx=5)
+        
+        tk.Label(child,text="Please give me a stock to describe: ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.stock_d).grid(row = 4, column = 1, pady=5, padx=5)
+
+        tk.Button(child,text="Overview selected stock", width = 15, font = self.button_font, command = lambda: self.get_overview(self.stock_d.get(), self.key.get())).grid(row = 5, column = 1, pady=5, padx=5)
+    
+    
+        
+        
+#OVERVIEW
+    def get_overview(self, stock_d, key):
+        self.str_ov = stki.get_overview(stock_d, key)
+        self.msg_window("Selected company information as following:\n{}".format(self.str_ov))
+        
+    def basic_menu(self):
+        
+        child = tk.Toplevel(self.master)
+        
+        tk.Label(child, text = "Welcome to the descriptive data Menu", font = self.heading_font).grid(row = 0, column = 2)
+        
+        tk.Button(child, width = 20, text = "Basic descriptive analytics", font = self.button_font, command = self.describe_symbol).grid(row = 1, column = 1)
+        tk.Button(child, width = 20, text = "Descriptive analytics comparison", font = self.button_font, command = self.combine_symbol).grid(row = 1, column = 3)
+        
     def describe_symbol(self):
 
         child = tk.Toplevel(self.master)
@@ -150,15 +183,33 @@ class ChooseStock:
         tk.Label(child,text="Please give me a downloaded stock: ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.stock_d).grid(row = 2, column = 1, pady=5, padx=5)
 
-        tk.Button(child,text="Describe stock", width = 15, font = self.button_font, command = lambda: self.get_descr(self.dict, self.stock_d.get())).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Button(child,text="Describe selected stock", width = 15, font = self.button_font, command = lambda: self.get_descr(self.dict, self.stock_d.get())).grid(row = 3, column = 1, pady=5, padx=5)
         
+    def combine_symbol(self):
+        
+        child = tk.Toplevel(self.master)
+        
+        self.stk_cp = tk.StringVar()
+        
+        tk.Label(child,text="For which stocks do you wish to comapre (separated with comma): " + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row=1,column=1,pady=5,padx=5)
+        tk.Entry(child,font = self.text_font, textvariable = self.stk_cp).grid(row=2,column=1,pady=5,padx=5)
+        
+        
+        tk.Button(child,text="Compare stocks", width = 10, font = self.button_font, command = lambda: self.get_combine(self.dict, self.stk_cp.get())).grid(row=5,column=1,pady=5,padx=5)
+    
+    
     def get_descr(self, stk_dict, stock_d):
         self.d_values, self.str_values = stki.get_description(stk_dict, stock_d)
         self.msg_window("Adjusted closing price of {} from {} to {}: {}".format(
                 stock_d, self.d_values.index[0], self.d_values.index[-1], self.str_values))
         
+    def get_combine(self, stk_dict, stk_cp):
+        c1, c2 = stk_cp.split(',')
+        compare_str = stkc.compare_stk(stk_dict, c1, c2)
+        self.msg_window(compare_str)
+        
+        
 #SPACE FOR REST OF THE BUTTONS AND FUNCTIONS        
-#OVERVIEW
 
 
 
