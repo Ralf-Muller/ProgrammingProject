@@ -1,5 +1,5 @@
 
-"""Request commands based on the code found in the documentation for Alphavantage/ 
+"""Request commands based on the code in the documentation for Alphavantage/ 
     Link: https://www.alphavantage.co/documentation/"""
     
 import requests
@@ -13,7 +13,7 @@ def req_list_symb(keywords, key):
         raise tk.messagebox.showerror("Error", "No key available")
     symbol_func = "SYMBOL_SEARCH"
     symbol_url = 'https://www.alphavantage.co/query?function={}&keywords={}&apikey={}'.format(
-    symbol_func, keywords, key)
+                    symbol_func, keywords, key)
     req_symb = requests.get(symbol_url)
     comp_stock = req_symb.json()
     return comp_stock
@@ -27,7 +27,8 @@ def comp_list(comp_stock):
               "Company Name : ", company['2. name'], "\n",
               "Stock Type : ", company['3. type'], "\n", 
               "Region : ", company['4. region'], "\n")
-        print("If you want to look for a stock info, please use the company symbol")
+        print("If you want to look for a stock info, \
+              please use the company symbol")
     else:
         print("No companies were found. Try again")
     
