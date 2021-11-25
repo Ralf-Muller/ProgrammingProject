@@ -20,8 +20,7 @@
 
 #WMT, TGT
 
-import GUI_combined as sr
-from GUI_combined import ChooseStock
+
 import stk_requestF as sr
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
