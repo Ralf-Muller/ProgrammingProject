@@ -8,7 +8,7 @@ import seaborn as sns # We decided to import seaborn to update the graphs and pl
 from datetime import datetime
 import stk_requestF as stkr
 import tkinter as tk
-import dataframe_image as dfi
+#import dataframe_image as dfi
 
 sns.set() # Setting the Matplotlib graphs as seaborn
 
@@ -30,8 +30,8 @@ def sk_simple_OLS(stocks, company, t_size, size):
     
     # Create the variables to Return to the user
     test_result = sk_test_OLS(x_test, y_test, reg)
-    test_styled = test_result.style.background_gradient()
-    dfi.export(test_styled,"testtable.png")
+    #test_styled = test_result.style.background_gradient()
+    #dfi.export(test_styled,"testtable.png")
     #model= sm.OLS(y_train,x_train).fit() # Overall analysis of the model
     # Create the variables to Return to the user
     RSME = sm.tools.eval_measures.rmse(predicted_v, targets, axis=0)

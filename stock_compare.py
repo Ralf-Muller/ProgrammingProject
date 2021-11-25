@@ -18,6 +18,7 @@ def compare_stk(stocks, company1, company2):
     ax.plot(day, price1, label = company1)
     ax.plot(day, price2, label = company2)
     ax.set_xticklabels(day, rotation = 45)
+    ax.xaxis.set_major_locator(plt.MaxNLocator(12))
     ax.set_title('Stock price comparision', fontsize=18)
     ax.set_xlabel('Date', fontsize = 10)
     ax.set_ylabel('{} stock price'.format(company1), fontsize = 10)

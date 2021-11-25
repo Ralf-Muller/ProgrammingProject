@@ -30,6 +30,7 @@ from statsmodels.tsa.arima_model import ARIMA
 import statsmodels.tsa.api as sm_tsa
 import datetime
 import tkinter as tk
+from stk_requestF import validate
 
 
 def close_or_adj(decis):
@@ -113,11 +114,15 @@ def correlogram(stock_dict, stock, diff, lags, decis):
 
 
 def make_arima(stock_dict, stock, decis, order_p, order_dif, order_q, pred_days, start_date):
+    validate(start_date, start_date)
     cur_seri = series_extract(stock, stock_dict, decis)
-    order_p = int(order_p)
-    order_dif = int(order_dif)
-    order_q = int(order_q)
-    pred_days = int(pred_days)
+    try:
+        order_p = int(order_p)
+        order_dif = int(order_dif)
+        order_q = int(order_q)
+        pred_days = int(pred_days)
+    except:
+        raise tk.messagebox.showerror("Error", "Non-numerical value in order or days")
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     model = ARIMA(cur_seri.dropna(), order = (order_p, order_dif, order_q)) 
     res = model.fit()
@@ -154,12 +159,13 @@ def valid_list(char):
     return int(char) in [0,1,2,3,4]
 
 def date_processes(cur_seri, start_date, end_date):
+    validate(start_date, end_date)
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
     if start_date <= cur_seri.index[0].to_timestamp():
-        raise tk.messagebox.showerror("Error", "Date too early")
+        raise tk.messagebox.showerror("Error", "Date earlier than the first date available")
     if end_date <= cur_seri.index[-1].to_timestamp():
-        raise tk.messagebox.showerror("Error", "Date too late")
+        raise tk.messagebox.showerror("Error", "Date earlier than the last date available")
     diff_date_d = end_date-start_date
     diff_date = diff_date_d.days
     sr.date_order(start_date, end_date)
@@ -198,8 +204,11 @@ def plotter_smooth(start_date, end_date, fit_and_fcast, cur_seri, ax, user_choic
 def exponential_graphs(stock_dict, stock, decis, start_date, end_date, smooth, damp, user_choice):
     cur_seri = series_extract(stock, stock_dict, decis)
     start_date, end_date, diff_date = date_processes(cur_seri, start_date, end_date)
-    smooth = float(smooth)
-    damp = float(damp)
+    try:
+        smooth = float(smooth)
+        damp = float(damp)
+    except:
+        raise tk.messagebox.showerror("Error", "You wrote a non-numerical character in smoothing and damping options") 
     fit_and_fcast = model_creation(cur_seri, smooth, damp, diff_date)
     ax = cur_seri[start_date:end_date].plot(color="black", marker="o", figsize=(12, 8))
     plotter_smooth(start_date, end_date, fit_and_fcast, cur_seri, ax, user_choice)

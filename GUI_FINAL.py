@@ -5,10 +5,6 @@
 
 import copy
 import tkinter as tk
-import requests
-import numpy as np
-import pandas as pd
-import datetime
 import stk_requestF as stkr
 import stock_info as stki
 import stock_compare as stkc
@@ -16,8 +12,6 @@ import predictive_analytics_ols as stkols
 import stock_lookup as stkl
 from tkinter import ttk
 import time_series as stkts
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 import date_as_floating_value as datef
 import visualizations as vs
 #key: 7QJ0OD6RU5IEVRO4
@@ -30,7 +24,7 @@ class ChooseStock:
         self.dict = {}
 
         master.title("Stock Analyser")
-        master.geometry('1600x900')
+        master.geometry('800x500')
 
         self.heading_font = ("Lato", 12, "bold")
         self.button_font = ("Lato", 11)
@@ -41,7 +35,7 @@ class ChooseStock:
 
         self.find = tk.Button(master, width = 20, text="Find Company Symbol", font = self.button_font, command = self.find_symbol).grid(row=2,column=2)
 
-        self.enter = tk.Button(master, width = 20, text="Enter Company Symbol", font = self.button_font, command = self.enter_symbol).grid(row=3,column=2)
+        self.enter = tk.Button(master, width = 20, text="Request Company Symbol", font = self.button_font, command = self.enter_symbol).grid(row=3,column=2)
         
         self.show = tk.Button(master, width = 20, text="Show Downloaded Stocks", font = self.button_font, command = self.show_me_all).grid(row=4,column=2)
         
@@ -69,9 +63,9 @@ class ChooseStock:
         #Main buttons section
     """Functions for calling symbols"""
     def show_me_all(self):
-        self.list = "Stock            Starting Date             Ending Date \n"
+        self.list = "Stock \t\t Starting Date \t\t Ending Date \n"
         for stock in list(self.dict.keys()):
-            stock_info = "{}               {}               {} \n".format(stock, self.dict[stock].index.values[0], self.dict[stock].index.values[-1])
+            stock_info = "{}\t\t{}\t\t{} \n".format(stock, self.dict[stock].index.values[0], self.dict[stock].index.values[-1])
             self.list += stock_info
         self.msg_window(self.list)
     
@@ -96,8 +90,6 @@ class ChooseStock:
         self.comp_stock = stkl.req_list_symb(keywords, key)
         strcompanies = ""
         if len(self.comp_stock['bestMatches']) > 0:
-            self.msg_window("Please select required symbol from options\
-                        \n and click 'Enter Company Symbol' to retrieve data.")
             for index, company in enumerate(self.comp_stock['bestMatches']):
                 strcompanies += ("Company Symbol : " + company['1. symbol'] + "\n" + 
               "Company Name : " + company['2. name'] + "\n" +
@@ -137,7 +129,8 @@ class ChooseStock:
         #stkr.date_order(start_date, end_date)
         self.dict = stkr.req_to_frame(stock_dict, key, stock, start_date, end_date)
         self.dict2 = datef._mutate_date_(copy.deepcopy(self.dict))
-        self.msg_window("Operation Successful. Downloaded {} ".format(list(self.dict.keys()))) 
+        self.msg_window("Operation Successful. Downloaded {} \n \
+                        Stocks downloaded : {}".format(stock, ', '.join(list(self.dict.keys())))) 
         
     """Functions for getting a stock basic statistics"""
     
@@ -155,7 +148,7 @@ class ChooseStock:
         tk.Label(child,text="Please give me a stock to describe: ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.stock_d).grid(row = 4, column = 1, pady=5, padx=5)
 
-        tk.Button(child,text="Overview selected stock", width = 15, font = self.button_font, command = lambda: self.get_overview(self.stock_d.get(), self.key.get())).grid(row = 5, column = 1, pady=5, padx=5)
+        tk.Button(child,text="Get Overview", width = 15, font = self.button_font, command = lambda: self.get_overview(self.stock_d.get(), self.key.get())).grid(row = 5, column = 1, pady=5, padx=5)
     
     
         
@@ -164,15 +157,15 @@ class ChooseStock:
     def get_overview(self, stock_d, key):
         self.str_ov = stki.get_overview(stock_d, key)
         self.msg_window("Selected company information as following:\n{}".format(self.str_ov))
-        
+
     def basic_menu(self):
         
         child = tk.Toplevel(self.master)
         
-        tk.Label(child, text = "Welcome to the descriptive data Menu", font = self.heading_font).grid(row = 0, column = 2)
+        tk.Label(child, text = "Welcome to the Descriptive Statistics Menu", font = self.heading_font).grid(row = 0, column = 2)
         
-        tk.Button(child, width = 20, text = "Basic descriptive analytics", font = self.button_font, command = self.describe_symbol).grid(row = 1, column = 1)
-        tk.Button(child, width = 20, text = "Descriptive analytics comparison", font = self.button_font, command = self.combine_symbol).grid(row = 1, column = 3)
+        tk.Button(child, width = 20, text = "Basic Statistics", font = self.button_font, command = self.describe_symbol).grid(row = 1, column = 1)
+        tk.Button(child, width = 20, text = "Comparison", font = self.button_font, command = self.combine_symbol).grid(row = 1, column = 3)
         
     def describe_symbol(self):
 
@@ -180,10 +173,10 @@ class ChooseStock:
         
         self.stock_d = tk.StringVar()
 
-        tk.Label(child,text="Please give me a downloaded stock: ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
+        tk.Label(child,text="Please give me a downloaded stock: "  + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.stock_d).grid(row = 2, column = 1, pady=5, padx=5)
 
-        tk.Button(child,text="Describe selected stock", width = 15, font = self.button_font, command = lambda: self.get_descr(self.dict, self.stock_d.get())).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Button(child,text="Describe", width = 15, font = self.button_font, command = lambda: self.get_descr(self.dict, self.stock_d.get())).grid(row = 3, column = 1, pady=5, padx=5)
         
     def combine_symbol(self):
         
@@ -195,18 +188,24 @@ class ChooseStock:
         tk.Entry(child,font = self.text_font, textvariable = self.stk_cp).grid(row=2,column=1,pady=5,padx=5)
         
         
-        tk.Button(child,text="Compare stocks", width = 10, font = self.button_font, command = lambda: self.get_combine(self.dict, self.stk_cp.get())).grid(row=5,column=1,pady=5,padx=5)
+        tk.Button(child,text="Compare", width = 10, font = self.button_font, command = lambda: self.get_combine(self.dict, self.stk_cp.get())).grid(row=5,column=1,pady=5,padx=5)
     
     
     def get_descr(self, stk_dict, stock_d):
+        if stock_d not in stk_dict:
+             raise tk.messagebox.showerror("Error","Stock doesn't exist")
         self.d_values, self.str_values = stki.get_description(stk_dict, stock_d)
         self.msg_window("Adjusted closing price of {} from {} to {}: {}".format(
                 stock_d, self.d_values.index[0], self.d_values.index[-1], self.str_values))
         
     def get_combine(self, stk_dict, stk_cp):
+        if "," not in stk_cp:
+            raise tk.messagebox.showerror("Error",'Need to input more than 1 stock')
         c1, c2 = stk_cp.split(',')
-        compare_str = stkc.compare_stk(stk_dict, c1, c2)
-        self.msg_window(compare_str)
+        stkols.val_company(stk_dict,[c1,c2])
+        if stk_dict[c1].index.equals(stk_dict[c2].index) != True:
+            raise tk.messagebox.showerror("Error",'Dates do not match')
+        stkc.compare_stk(stk_dict, c1, c2)
         
         
 #SPACE FOR REST OF THE BUTTONS AND FUNCTIONS        
@@ -240,10 +239,14 @@ class ChooseStock:
         self.stock_olst = tk.Entry(child,font = self.text_font)
         self.stock_olst.grid(row=4,column=1,pady=5,padx=5) 
         
-        describe = tk.Button(child,text="Analyse stocks", width = 10, font = self.button_font, command = lambda: self.get_ols2(self.dict2, self.stock_ols2.get(), self.stock_olst.get())).grid(row=5,column=1,pady=5,padx=5)
+        describe = tk.Button(child,text="Analyse", width = 10, font = self.button_font, command = lambda: self.get_ols2(self.dict2, self.stock_ols2.get(), self.stock_olst.get())).grid(row=5,column=1,pady=5,padx=5)
 
     def get_ols2(self, dict2, stocks, t_size):       
+        if "," not in stocks:
+            raise tk.messagebox.showerror("Error",'Need to input more than 1 stock')
         companies = stocks.split(',')
+        if dict2[companies[0]].index.equals(dict2[companies[1]].index) != True:
+            raise tk.messagebox.showerror("Error",'Dates do not match')
         ols2str = stkols.OLS_two_stocks(dict2, companies, t_size)
         self.msg_window(ols2str)
 
@@ -261,7 +264,7 @@ class ChooseStock:
         self.dateols = tk.Entry(child,font = self.text_font)
         self.dateols.grid(row=6,column=1,pady=5,padx=5)
         
-        describe = tk.Button(child,text="Analyse stocks", width = 10, font = self.button_font, command = lambda: self.get_ols(self.dict2, self.stock_ols.get(), self.stock_olst.get(), self.dateols.get())).grid(row=7,column=1,pady=5,padx=5)
+        describe = tk.Button(child,text="Analyse", width = 10, font = self.button_font, command = lambda: self.get_ols(self.dict2, self.stock_ols.get(), self.stock_olst.get(), self.dateols.get())).grid(row=7,column=1,pady=5,padx=5)
 
     def get_ols(self, dict2, stocks, t_size, date): 
         companies = stocks.split(',')
@@ -273,13 +276,13 @@ class ChooseStock:
     def visualisations_menu(self):
         child = tk.Toplevel(self.master)
 
-        tk.Label(child, text="Please select a visualisation from list below", font = self.heading_font).grid(row= 0,column= 2)
+        tk.Label(child, text="Please select a visualization from list below", font = self.heading_font).grid(row= 0,column= 2)
 
         self.raw = tk.Button(child, width = 20, text="Raw Time Series", font = self.button_font, command = self.raw_ts).grid(row=3,column=1,pady=5,padx=5)           
         self.trend = tk.Button(child, width = 20, text="Trend Line", font = self.button_font, command = self.trend).grid(row=4,column=1,pady=5,padx=5)     
         self.sma = tk.Button(child, width = 20, text="Moving Averages", font = self.button_font, command = self.sma).grid(row=5,column=1,pady=5,padx=5)           
         self.bband = tk.Button(child, width = 20, text="Bollinger Bands", font = self.button_font, command = self.bollinger).grid(row=2,column=1,pady=5,padx=5) 
-        self.wsma = tk.Button(child, width = 20, text="Weighted Moving Averages", font = self.button_font, command = self.wma).grid(row=2,column=3,pady=5,padx=5)    
+        self.wsma = tk.Button(child, width = 20, text="WMA", font = self.button_font, command = self.wma).grid(row=2,column=3,pady=5,padx=5)    
         self.bmacd = tk.Button(child, width = 20, text="MACD", font = self.button_font, command = self.macd).grid(row=3,column=3,pady=5,padx=5)    
         self.brsi = tk.Button(child, width = 20, text="RSI", font = self.button_font, command = self.rsi).grid(row=4,column=3,pady=5,padx=5)        
         self.autocorrel = tk.Button(child, width = 20, text="Autocorrelation", font = self.button_font, command = self.auto_c).grid(row=5,column=3,pady=5,padx=5)
@@ -321,7 +324,7 @@ class ChooseStock:
         self.stock_sma = tk.Entry(child,font = self.text_font)
         self.stock_sma.grid(row=2,column=1,pady=5,padx=5)
         
-        sma_win = tk.Label(child,text="Please select the Window Size: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
+        sma_win = tk.Label(child,text="Please select the Window Size (larger than 0, less than max observations) : ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
         self.sma_win = tk.Entry(child,font = self.text_font)
         self.sma_win.grid(row=4,column=1,pady=5,padx=5)
 
@@ -337,7 +340,7 @@ class ChooseStock:
         self.stock_wma = tk.Entry(child,font = self.text_font)
         self.stock_wma.grid(row=2,column=1,pady=5,padx=5)
         
-        wma_win = tk.Label(child,text="Please select the Window Size: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
+        wma_win = tk.Label(child,text="Please select the Window Size (larger than 0, less than max observations) :", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
         self.wma_win = tk.Entry(child,font = self.text_font)
         self.wma_win.grid(row=4,column=1,pady=5,padx=5)
 
@@ -353,11 +356,11 @@ class ChooseStock:
         self.stock_sma = tk.Entry(child,font = self.text_font)
         self.stock_sma.grid(row=2,column=1,pady=5,padx=5)
         
-        sma_win = tk.Label(child,text="Please select the Window Size: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
+        sma_win = tk.Label(child,text="Please select the Window Size (larger than 0, less than max observations) :", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
         self.sma_win = tk.Entry(child,font = self.text_font)
         self.sma_win.grid(row=4,column=1,pady=5,padx=5)
         
-        stdev = tk.Label(child,text='How many standard deviations away from the mean do you wish to calculate? ', font = self.text_font).grid(row=5,column=1,pady=5,padx=5)
+        stdev = tk.Label(child,text='How many standard deviations away from the mean do you wish to calculate? (1-3)', font = self.text_font).grid(row=5,column=1,pady=5,padx=5)
         self.stdev = tk.Entry(child,font = self.text_font)
         self.stdev.grid(row=6,column=1,pady=5,padx=5)
         
@@ -373,15 +376,15 @@ class ChooseStock:
         self.stock_macd = tk.Entry(child,font = self.text_font)
         self.stock_macd.grid(row=2,column=1,pady=5,padx=5)
         
-        fema = tk.Label(child,text="Please enter the length of the Fast EMA: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
+        fema = tk.Label(child,text="Please enter the length of the Fast EMA (15-30) : ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
         self.fema = tk.Entry(child,font = self.text_font)
         self.fema.grid(row=4,column=1,pady=5,padx=5)
         
-        sema = tk.Label(child,text="Please enter the length of the Slow EMA: ", font = self.text_font).grid(row=5,column=1,pady=5,padx=5)
+        sema = tk.Label(child,text="Please enter the length of the Slow EMA (10-20) : ", font = self.text_font).grid(row=5,column=1,pady=5,padx=5)
         self.sema = tk.Entry(child,font = self.text_font)
         self.sema.grid(row=6,column=1,pady=5,padx=5)
         
-        smooth = tk.Label(child,text="Please enter the period of the Signal Line", font = self.text_font).grid(row=7,column=1,pady=5,padx=5)
+        smooth = tk.Label(child,text="Please enter the period of the Signal Line (5-10) :", font = self.text_font).grid(row=7,column=1,pady=5,padx=5)
         self.smooth = tk.Entry(child,font = self.text_font)
         self.smooth.grid(row=8,column=1,pady=5,padx=5)
 
@@ -397,7 +400,7 @@ class ChooseStock:
         self.stock_rsi = tk.Entry(child,font = self.text_font)
         self.stock_rsi.grid(row=2,column=1,pady=5,padx=5)
         
-        sma_win = tk.Label(child,text="Please select the Window Size: ", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
+        sma_win = tk.Label(child,text="Please select the Window Size (larger than 0, less than max observations) :", font = self.text_font).grid(row=3,column=1,pady=5,padx=5)
         self.sma_win = tk.Entry(child,font = self.text_font)
         self.sma_win.grid(row=4,column=1,pady=5,padx=5)
 
@@ -444,11 +447,11 @@ class ChooseStock:
         self.stock2_coint = tk.StringVar()
         self.decis_coint = tk.StringVar()
 
-        tk.Label(child,text = "Please give me the first stock : ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
+        tk.Label(child,text = "Please give me the first stock : "  + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.stock1_coint).grid(row = 2, column = 1, pady=5, padx=5)
 
 
-        tk.Label(child,text = "Please give me the second stock : ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Label(child,text = "Please give me the second stock : "  + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.stock2_coint).grid(row = 4, column = 1, pady=5, padx=5)
 
 
@@ -459,6 +462,7 @@ class ChooseStock:
 
 
     def coint_test(self, stk_dict, stock1, stock2, decis):
+        stkols.val_company(stk_dict,[stock1, stock2])
         if stk_dict[stock1].index.equals(stk_dict[stock2].index) != True:
             raise tk.messagebox.showerror("Error",'Dates do not match')
         self.coint_string = stkts.co_integration(stk_dict, stock1, stock2, decis)
@@ -475,11 +479,11 @@ class ChooseStock:
         self.decis_corr = tk.StringVar()
         self.lags_corr = tk.StringVar()
 
-        tk.Label(child,text = "Please give me a stock : ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
+        tk.Label(child,text = "Please give me a stock : "  + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.stock_corr).grid(row = 2, column = 1, pady=5, padx=5)
 
 
-        tk.Label(child,text = "Please give me the number of lags : ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
+        tk.Label(child,text = "Please give me the number of lags (less than total observations) : ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.lags_corr).grid(row = 4, column = 1, pady=5, padx=5)
 
 
@@ -510,7 +514,7 @@ class ChooseStock:
         self.start_date_arima = tk.StringVar()
         
         
-        tk.Label(child,text = "Please give me the stock : ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
+        tk.Label(child,text = "Please give me the stock : "  + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.stock_arima).grid(row = 2, column = 1, pady=5, padx=5)
 
         tk.Label(child,text = "Please give me the AR order p : ", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
@@ -525,13 +529,13 @@ class ChooseStock:
         tk.Label(child,text = "Please give me the number of days to predicts : ", font = self.text_font).grid(row = 9, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.pred_days_arima).grid(row = 10, column = 1, pady=5, padx=5)
 
-        tk.Label(child,text = "Please give me the start date of the prediction : ", font = self.text_font).grid(row = 11, column = 1, pady=5, padx=5)
+        tk.Label(child,text = "Please give me the start date of the prediction YYYY-MM-DD :", font = self.text_font).grid(row = 11, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.start_date_arima).grid(row = 12, column = 1, pady=5, padx=5)
 
         tk.Label(child,text = "Input 1 for Adjusted Close and anything else for Close " , font = self.text_font).grid(row = 13, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.decis_arima).grid(row = 14, column = 1, pady=5, padx=5)
 
-        tk.Button(child,text="Produce ARIMA", width = 10, font = self.button_font, command = lambda : self.arima_maker(
+        tk.Button(child,text="Produce", width = 10, font = self.button_font, command = lambda : self.arima_maker(
                 self.dict, self.stock_arima.get(), self.decis_arima.get(), 
                 self.ord_p_arima.get(), self.ord_d_arima.get(), self.ord_q_arima.get(),
                 self.pred_days_arima.get(), self.start_date_arima.get())).grid(row = 15, column = 1, pady=10, padx=10)
@@ -555,21 +559,21 @@ class ChooseStock:
         self.end_date_exp = tk.StringVar()
         self.start_date_exp = tk.StringVar()
         
-        tk.Label(child,text = "Please give me the stock : ", font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
+        tk.Label(child,text = "Please give me the stock : "  + ', '.join(list(self.dict.keys())), font = self.text_font).grid(row = 1, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.stock_exp).grid(row = 2, column = 1, pady=5, padx=5)
 
-        tk.Label(child,text = "Feed a date to start the prediction YYYY-MM-DD \
+        tk.Label(child,text = "Feed a date to start the prediction YYYY-MM-DD \n \
                  PLEASE WRITE A DATE LATER THAN THE FIRST AVAILABLE DATE", font = self.text_font).grid(row = 3, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.start_date_exp).grid(row = 4, column = 1, pady=5, padx=5)
 
-        tk.Label(child,text = "Feed a date to end the prediction YYYY-MM-DD: \
-                 PLEASE WRITE A DATE LATER THAN THE FIRST AVAILABLE DATE", font = self.text_font).grid(row = 5, column = 1, pady=5, padx=5)
+        tk.Label(child,text = "Feed a date to end the prediction YYYY-MM-DD \n \
+                 PLEASE WRITE A DATE LATER THAN THE LAST AVAILABLE DATE", font = self.text_font).grid(row = 5, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.end_date_exp).grid(row = 6, column = 1, pady=5, padx=5)
 
-        tk.Label(child,text = "Please feed me a smoothing level for Simple Exponential Smoothing : ", font = self.text_font).grid(row = 7, column = 1, pady=5, padx=5)
+        tk.Label(child,text = "Please feed me a smoothing level for Simple Exponential Smoothing (0 to 1) : ", font = self.text_font).grid(row = 7, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.smooth_exp).grid(row = 8, column = 1, pady=5, padx=5)
 
-        tk.Label(child,text = "Please feed me a damping slope for Holt's Additive Model : ", font = self.text_font).grid(row = 9, column = 1, pady=5, padx=5)
+        tk.Label(child,text = "Please feed me a damping slope for Holt's Additive Model (0 to 1): ", font = self.text_font).grid(row = 9, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.damp_exp).grid(row = 10, column = 1, pady=5, padx=5)
 
         tk.Label(child,text = "Please write the options you want: \n \
@@ -584,7 +588,7 @@ class ChooseStock:
         tk.Label(child,text = "Input 1 for Adjusted Close and anything else for Close " , font = self.text_font).grid(row = 13, column = 1, pady=5, padx=5)
         tk.Entry(child,font = self.text_font, textvariable = self.decis_exp).grid(row = 14, column = 1, pady=5, padx=5)
         
-        tk.Button(child,text="Produce Graphs", width = 10, font = self.button_font, command = lambda : self.exp_maker(
+        tk.Button(child,text="Produce", width = 10, font = self.button_font, command = lambda : self.exp_maker(
                 self.dict, self.stock_exp.get(), self.decis_exp.get(), 
                 self.start_date_exp.get(), self.end_date_exp.get(), self.smooth_exp.get(),
                 self.damp_exp.get(), self.user_exp.get())).grid(row = 15, column = 1, pady=10, padx=10)
@@ -596,7 +600,7 @@ class ChooseStock:
         #Create message window
         child = tk.Toplevel(self.master)
         label = tk.Label(child, text = msg, font = self.text_font)
-        label.pack(pady = 10, padx=10)
+        label.pack(pady = 10, padx=10, anchor = "w")
     
     def new_window(self):
         #Create window

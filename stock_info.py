@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import statistics
 from operator import itemgetter
-
+import tkinter as tk
 
 #key: 7QJ0OD6RU5IEVRO4
 
@@ -14,14 +14,25 @@ def get_overview(stock, key):
     url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol={}&apikey={}'.format(stock, key)
     r = requests.get(url)
     info = r.json()
-    
+    if "Symbol" not in info:
+        raise tk.messagebox.showerror("Error", "Stock not found in Alphavantage. Did you use the correct symbol? Please try again")
+
+        
+    #print(info)
     #print('--'*50, '\nCompany overview:')
     #overview = pd.DataFrame(itemgetter('Symbol', 'Name', 'Country', 'Sector', 'Industry')(info), index = ['Symbol:', 'Name:', 'Country:', 'Sector:', 'Industry:'])
-    str_ov = str(
-                 pd.DataFrame(itemgetter('Symbol', 'Name', 'Country', 'Sector', 'Industry')(info), 
-    index = ['Symbol:', 'Name:', 'Country:', 'Sector:', 'Industry:'])
-                 )
-    print(str_ov)
+    str_ov = "Symbol:  {}\n\
+            Name:  {}\n\
+            Country:  {}\n\
+            Sector:  {}\n\
+            Industry:  {}".format(info["Symbol"], info["Name"], 
+            info["Country"], info["Sector"], info["Industry"])
+    
+#    str(info['Symbol'],inf
+#                 pd.DataFrame(itemgetter('Symbol', 'Name', 'Country', 'Sector', 'Industry')(info), 
+ #   index = ['Symbol:', 'Name:', 'Country:', 'Sector:', 'Industry:'])
+                 #)
+    #print(str_ov)
     return str_ov
 
 

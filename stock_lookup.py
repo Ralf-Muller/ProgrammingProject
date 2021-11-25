@@ -3,12 +3,14 @@
     Link: https://www.alphavantage.co/documentation/"""
     
 import requests
-
+import tkinter as tk
 
 def req_list_symb(keywords, key):
     #Function that asks the user to input their key and a name
     #Returns a dictionary with a list of the companies 
     #with the most similar name
+    if key == "":
+        raise tk.messagebox.showerror("Error", "No key available")
     symbol_func = "SYMBOL_SEARCH"
     symbol_url = 'https://www.alphavantage.co/query?function={}&keywords={}&apikey={}'.format(
     symbol_func, keywords, key)
