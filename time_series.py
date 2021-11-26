@@ -37,19 +37,11 @@ import tkinter as tk
 from stk_requestF import validate
 
 
-def close_or_adj(decis):
-    if decis == "1":
-        col_use = "5. adjusted close"
-    else:
-        col_use = "4. close"
-    return col_use
 
-
-def series_extract(stock, stock_dict, decis):
+def series_extract(stock, stock_dict):
     #Extracts a series from the dataframe
-    col_use = close_or_adj(decis)
     try:
-        cur_seri = pd.Series(stock_dict[stock][col_use].copy())
+        cur_seri = pd.Series(stock_dict[stock]["5. adjusted close"].copy())
         cur_seri.index = pd.to_datetime(cur_seri.index).to_period("B")
     except KeyError:
         raise tk.messagebox.showerror("Error", 
@@ -57,9 +49,9 @@ def series_extract(stock, stock_dict, decis):
     return cur_seri
 
 
-def correlogram(stock_dict, stock, diff, lags, decis):
+def correlogram(stock_dict, stock, diff, lags):
     #Creates the graphs for ACF and PACF based on user input
-    cur_seri = series_extract(stock, stock_dict, decis) 
+    cur_seri = series_extract(stock, stock_dict) 
     comb = plt.figure()  
     if diff == "1":
         try:
@@ -92,11 +84,11 @@ def correlogram(stock_dict, stock, diff, lags, decis):
           "Did you write a number above the possible lag limit or a letter?.")
 
 
-def make_arima(stock_dict, stock, decis, order_p, order_dif, 
+def make_arima(stock_dict, stock, order_p, order_dif, 
                order_q, pred_days, start_date):
     #Function for creating ARIMA
     validate(start_date, start_date)
-    cur_seri = series_extract(stock, stock_dict, decis)
+    cur_seri = series_extract(stock, stock_dict)
     try:
         order_p = int(order_p)
         order_dif = int(order_dif)
@@ -126,10 +118,10 @@ def make_arima(stock_dict, stock, decis, order_p, order_dif,
     return results
 
 
-def co_integration(stock_dict, stock1, stock2, decis):
+def co_integration(stock_dict, stock1, stock2):
     #Function for cointegration test
-    cur_seri1 = series_extract(stock1, stock_dict, decis) 
-    cur_seri2 = series_extract(stock2, stock_dict, decis)
+    cur_seri1 = series_extract(stock1, stock_dict) 
+    cur_seri2 = series_extract(stock2, stock_dict)
     t_stat, p_val, crit_v = sm.tsa.stattools.coint(cur_seri1, cur_seri2)
     coint_string = "Results for the cointegration test : \n \
           T-statistic : {}   \n   \
@@ -197,9 +189,9 @@ def plotter_smooth(start_date, end_date, fit_and_fcast,
         if end_date > cur_seri.index[-1].to_timestamp() :
             fit_and_fcast[i][1].plot(ax=ax, color= color[i], legend=True)
 
-def exponential_graphs(stock_dict, stock, decis, start_date, end_date, smooth,
+def exponential_graphs(stock_dict, stock, start_date, end_date, smooth,
                        damp, user_choice):
-    cur_seri = series_extract(stock, stock_dict, decis)
+    cur_seri = series_extract(stock, stock_dict)
     start_date, end_date, diff_date = date_processes(cur_seri, start_date,
                                                      end_date)
     try:
