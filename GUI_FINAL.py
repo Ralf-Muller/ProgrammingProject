@@ -829,14 +829,6 @@ class ChooseStock:
         label = tk.Label(child, text = msg, font = self.text_font)
         label.pack(pady = 10, padx=10, anchor = "w")
     
-    
-    def clear_text(self, stock, start_date, end_date):
-        # Clears text after data has been retrieved
-        # https://www.tutorialspoint.com/how-to-clear-the-entry-widget-after-a-
-        # button-is-pressed-in-tkinter
-        self.stock.delete(0, tk.END)
-        self.start_date.delete(0, tk.END)
-        self.end_date.delete(0, tk.END)
         
     def quit(self):
         self.master.destroy()

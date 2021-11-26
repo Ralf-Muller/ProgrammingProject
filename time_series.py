@@ -144,12 +144,15 @@ def date_processes(cur_seri, start_date, end_date):
     validate(start_date, end_date)
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+    if start_date > cur_seri.index[-1].to_timestamp():
+        raise tk.messagebox.showerror("Error", 
+                              "Start Date later than the last date available")
     if start_date <= cur_seri.index[0].to_timestamp():
         raise tk.messagebox.showerror("Error", 
-                              "Date earlier than the first date available")
+                              "Start Date earlier than the first date available")
     if end_date <= cur_seri.index[-1].to_timestamp():
         raise tk.messagebox.showerror("Error", 
-                              "Date earlier than the last date available")
+                              "End Date earlier than the last date available")
     diff_date_d = end_date-start_date
     diff_date = diff_date_d.days
     sr.date_order(start_date, end_date)
