@@ -75,7 +75,7 @@ class ChooseStock:
                        ).grid(row= 10,column=1,pady=10,padx=10)
         
         self.visualization = tk.Button(master, width = 20, 
-                               text = "Visualisation", font = self.button_font,
+                               text = "Visualisations", font = self.button_font,
                                command=self.visualisations_menu).grid(row=11,
                                column=1,pady=10,padx=10)
         
