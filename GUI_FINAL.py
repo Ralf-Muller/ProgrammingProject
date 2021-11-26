@@ -387,10 +387,10 @@ class ChooseStock:
                      font = self.button_font, command = self.raw_ts).grid(
                      row=3,column=1,pady=5,padx=5)           
         self.trend = tk.Button(child, width = 20, text="Trend Line", 
-                     font = self.button_font, command = self.trend).grid(
+                     font = self.button_font, command = self.trend_menu).grid(
                      row=4,column=1,pady=5,padx=5)     
         self.sma = tk.Button(child, width = 20, text="Moving Averages", 
-                   font = self.button_font, command = self.sma).grid(row=5,
+                   font = self.button_font, command = self.sma_menu).grid(row=5,
                    column=1,pady=5,padx=5)           
         self.bband = tk.Button(child, width = 20, text="Bollinger Bands", 
                       font = self.button_font, command = self.bollinger).grid(
@@ -427,7 +427,7 @@ class ChooseStock:
         companies = company.split(',')
         vs.raw_time_series(dict2, companies)        
     
-    def trend(self):
+    def trend_menu(self):
         child = tk.Toplevel(self.master)
         tk.Label(child,text="For which stock do you wish to make your analysis: " + 
                  ', '.join(list(self.dict.keys())), 
@@ -448,7 +448,7 @@ class ChooseStock:
         companies = stocks.split(',')
         vs.plot_trend_line(dict2, companies, t_size)
 
-    def sma(self):
+    def sma_menu(self):
         child = tk.Toplevel(self.master)
         tk.Label(child,text="For which stock do you wish to make your analysis: " +
                  ', '.join(list(self.dict.keys())), 
